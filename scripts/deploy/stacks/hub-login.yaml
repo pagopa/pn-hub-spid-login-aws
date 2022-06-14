@@ -273,8 +273,7 @@ Resources:
           Ref: Port
         ToPort:
           Ref: Port
-        SourceSecurityGroupId:
-          Ref: IngressSecurityGroup
+        CidrIp: 0.0.0.0/0
       VpcId:
         Ref: VpcId
 

@@ -16,13 +16,17 @@ Metadata:
     - Label:
         default: Network
       Parameters:
-      - CIDRVPC
-      - CIDRBackEndA
-      - CIDRBackEndB
-      - CIDRBackEndC
-      - CIDRFrontEndA
-      - CIDRFrontEndB
-      - CIDRFrontEndC
+      - FrontEndVpcId
+      - BackEndVpcId
+      - FrontEndSubnets
+      - BackEndSubnets
+      # - CIDRVPC
+      # - CIDRBackEndA
+      # - CIDRBackEndB
+      # - CIDRBackEndC
+      # - CIDRFrontEndA
+      # - CIDRFrontEndB
+      # - CIDRFrontEndC
     - Label:
         default: Hub Login
       Parameters:
@@ -35,20 +39,28 @@ Metadata:
       - SpidSamlCheckVersion
       - SpidSamlCheckConfigVersion
     ParameterLabels:
-      CIDRVPC:
-        default: VPC CIDR
-      CIDRBackEndA:
-        default: BackEnd Subnet A CIDR
-      CIDRBackEndB:
-        default: BackEnd Subnet B CIDR
-      CIDRBackEndC:
-        default: BackEnd Subnet C CIDR
-      CIDRFrontEndA:
-        default: FrontEnd Subnet A CIDR
-      CIDRFrontEndB:
-        default: FrontEnd Subnet B CIDR
-      CIDRFrontEndC:
-        default: FrontEnd Subnet C CIDR
+      FrontEndVpcId:
+        default: Vpc Id
+      BackEndVpcId:
+        default: Vpc Id
+      FrontEndSubnets:
+        default: Comma separated list of front-end subnets ids
+      BackEndSubnets:
+        default: Comma separated list of back-end subnets ids
+      # CIDRVPC:
+      #   default: VPC CIDR
+      # CIDRBackEndA:
+      #   default: BackEnd Subnet A CIDR
+      # CIDRBackEndB:
+      #   default: BackEnd Subnet B CIDR
+      # CIDRBackEndC:
+      #   default: BackEnd Subnet C CIDR
+      # CIDRFrontEndA:
+      #   default: FrontEnd Subnet A CIDR
+      # CIDRFrontEndB:
+      #   default: FrontEnd Subnet B CIDR
+      # CIDRFrontEndC:
+      #   default: FrontEnd Subnet C CIDR
       DomainName:
         default: Domain Name
       HostedZoneId:
@@ -97,66 +109,83 @@ Parameters:
     AllowedPattern: ^((?!xn--)(?!.*-s3alias)[a-z0-9][a-z0-9-]{1,61}[a-z0-9])$
     Description: The S3 bucked used as storage
     Type: String
-
-  CIDRVPC:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    Description: CIDR block for VPC
+  
+  BackEndVpcId:
     Type: String
-
-  CIDRDataA:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    Description: CIDR block for subnet Data A
+    Description: The id of the deployment VPC
+  
+  FrontEndVpcId:
     Type: String
-
-  CIDRDataB:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    Description: CIDR block for subnet Data B
+    Description: The id of the deployment VPC
+  
+  FrontEndSubnets:
     Type: String
-
-  CIDRDataC:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    Description: CIDR block for subnet Data C
+    Description: FrontEnd subnets ids
+  
+  BackEndSubnets:
     Type: String
+    Description: BackEnd subnets ids
+  
 
-  CIDRBackEndA:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    Description: CIDR block for subnet BackEnd A
-    Type: String
+  # CIDRVPC:
+  #   AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+  #   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+  #   Description: CIDR block for VPC
+  #   Type: String
 
-  CIDRBackEndB:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    Description: CIDR block for subnet BackEnd B
-    Type: String
+  # CIDRDataA:
+  #   AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+  #   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+  #   Description: CIDR block for subnet Data A
+  #   Type: String
 
-  CIDRBackEndC:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    Description: CIDR block for subnet BackEnd C
-    Type: String
+  # CIDRDataB:
+  #   AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+  #   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+  #   Description: CIDR block for subnet Data B
+  #   Type: String
 
-  CIDRFrontEndA:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    Description: CIDR block for subnet FrontEnd A
-    Type: String
+  # CIDRDataC:
+  #   AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+  #   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+  #   Description: CIDR block for subnet Data C
+  #   Type: String
 
-  CIDRFrontEndB:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    Description: CIDR block for subnet FrontEnd B
-    Type: String
+  # CIDRBackEndA:
+  #   AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+  #   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+  #   Description: CIDR block for subnet BackEnd A
+  #   Type: String
 
-  CIDRFrontEndC:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    Description: CIDR block for subnet FrontEnd C
-    Type: String
+  # CIDRBackEndB:
+  #   AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+  #   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+  #   Description: CIDR block for subnet BackEnd B
+  #   Type: String
+
+  # CIDRBackEndC:
+  #   AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+  #   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+  #   Description: CIDR block for subnet BackEnd C
+  #   Type: String
+
+  # CIDRFrontEndA:
+  #   AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+  #   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+  #   Description: CIDR block for subnet FrontEnd A
+  #   Type: String
+
+  # CIDRFrontEndB:
+  #   AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+  #   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+  #   Description: CIDR block for subnet FrontEnd B
+  #   Type: String
+
+  # CIDRFrontEndC:
+  #   AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+  #   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+  #   Description: CIDR block for subnet FrontEnd C
+  #   Type: String
 
   DomainName:
     Description: The Domain Name
@@ -192,102 +221,77 @@ Parameters:
 
 Resources:
 
-  Network:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      Parameters:
-        Project:
-          Ref: Project
-        Environment:
-          Ref: Environment
-        CIDRVPC:
-          Ref: CIDRVPC
-        CIDRDataA:
-          Ref: CIDRDataA
-        CIDRDataB:
-          Ref: CIDRDataB
-        CIDRDataC:
-          Ref: CIDRDataC
-        CIDRBackEndA:
-          Ref: CIDRBackEndA
-        CIDRBackEndB:
-          Ref: CIDRBackEndB
-        CIDRBackEndC:
-          Ref: CIDRBackEndC
-        CIDRFrontEndA:
-          Ref: CIDRFrontEndA
-        CIDRFrontEndB:
-          Ref: CIDRFrontEndB
-        CIDRFrontEndC:
-          Ref: CIDRFrontEndC
-      TemplateURL: ./stacks/network.yaml
+  # Network:
+  #   Type: AWS::CloudFormation::Stack
+  #   Properties:
+  #     Parameters:
+  #       Project:
+  #         Ref: Project
+  #       Environment:
+  #         Ref: Environment
+  #       CIDRVPC:
+  #         Ref: CIDRVPC
+  #       CIDRDataA:
+  #         Ref: CIDRDataA
+  #       CIDRDataB:
+  #         Ref: CIDRDataB
+  #       CIDRDataC:
+  #         Ref: CIDRDataC
+  #       CIDRBackEndA:
+  #         Ref: CIDRBackEndA
+  #       CIDRBackEndB:
+  #         Ref: CIDRBackEndB
+  #       CIDRBackEndC:
+  #         Ref: CIDRBackEndC
+  #       CIDRFrontEndA:
+  #         Ref: CIDRFrontEndA
+  #       CIDRFrontEndB:
+  #         Ref: CIDRFrontEndB
+  #       CIDRFrontEndC:
+  #         Ref: CIDRFrontEndC
+  #     TemplateURL: ./stacks/network.yaml
 
   Orchestrator:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
-        Project:
-          Ref: Project
-        Environment:
-          Ref: Environment
-        DomainName:
-          Ref: DomainName
-        HostedZoneId:
-          Ref: HostedZoneId
-        VpcId:
-          Fn::GetAtt:
-          - Network
-          - Outputs.VPCId
-        Subnets:
-          Fn::GetAtt:
-          - Network
-          - Outputs.FrontEndSubnets
+        Project: !Ref Project
+        Environment: !Ref Environment
+        DomainName: !Ref DomainName
+        HostedZoneId: !Ref HostedZoneId
+        VpcId: !Ref FrontEndVpcId
+        Subnets: !Ref FrontEndSubnets
       TemplateURL: ./stacks/orchestrator.yaml
 
   Cache:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
-        Project:
-          Ref: Project
-        Environment:
-          Ref: Environment
-        VpcId:
-          Fn::GetAtt:
-          - Network
-          - Outputs.VPCId
-        Subnets:
-          Fn::GetAtt:
-          - Network
-          - Outputs.DataSubnets
+        Project: !Ref Project
+        Environment: !Ref Environment
+        VpcId: !Ref BackEndVpcId
+        Subnets: !Ref BackEndSubnets
       TemplateURL: ./stacks/cache.yaml
 
   HubLogin:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
-        Project:
-          Ref: Project
-        Environment:
-          Ref: Environment
-        Storage:
-          Ref: Storage
-        Version:
-          Ref: HubLoginVersion
-        ConfigVersion:
-          Ref: HubLoginConfigVersion
-        Secrets:
-          Ref: HubLoginSecrets
-        DomainName:
-          Ref: DomainName
-        VpcId:
-          Fn::GetAtt:
-          - Network
-          - Outputs.VPCId
-        Subnets:
-          Fn::GetAtt:
-          - Network
-          - Outputs.BackEndSubnets
+        Project: !Ref Project
+        Environment: !Ref Environment
+        Storage: !Ref Storage
+        Version: !Ref HubLoginVersion
+        ConfigVersion: !Ref HubLoginConfigVersion
+        Secrets: !Ref HubLoginSecrets
+        DomainName: !Ref DomainName
+        VpcId: !Ref BackEndVpcId
+          #Fn::GetAtt:
+          #- Network
+          #- Outputs.VPCId
+        Subnets: !Ref BackEndSubnets
+          #Fn::GetAtt:
+          #- Network
+          #- Outputs.BackEndSubnets
         Cluster:
           Fn::GetAtt:
           - Orchestrator
@@ -325,26 +329,20 @@ Resources:
     - HubLogin
     Properties:
       Parameters:
-        Project:
-          Ref: Project
-        Environment:
-          Ref: Environment
-        Version:
-          Ref: SpidSamlCheckVersion
-        Storage:
-          Ref: Storage
-        ConfigVersion:
-          Ref: SpidSamlCheckConfigVersion
-        DomainName:
-          Ref: DomainName
-        VpcId:
-          Fn::GetAtt:
-          - Network
-          - Outputs.VPCId
-        Subnets:
-          Fn::GetAtt:
-          - Network
-          - Outputs.BackEndSubnets
+        Project: !Ref Project
+        Environment: !Ref Environment
+        Version: !Ref SpidSamlCheckVersion
+        Storage: !Ref Storage
+        ConfigVersion: !Ref SpidSamlCheckConfigVersion
+        DomainName: !Ref DomainName
+        VpcId: !Ref BackEndVpcId
+          #Fn::GetAtt:
+          #- Network
+          #- Outputs.VPCId
+        Subnets: !Ref BackEndSubnets
+          #Fn::GetAtt:
+          #- Network
+          #- Outputs.BackEndSubnets
         Cluster:
           Fn::GetAtt:
           - Orchestrator

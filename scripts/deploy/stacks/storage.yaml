@@ -18,6 +18,7 @@ Parameters:
     - dev
     - uat
     - prod
+    - svil
 
   StorageKMSKey:
     Default: alias/aws/s3
@@ -33,7 +34,7 @@ Resources:
     UpdateReplacePolicy: Retain
     Properties:
       BucketName:
-        Fn::Sub: "${Project}-${Environment}-${AWS::Region}"
+        Fn::Sub: "${Project}-${Environment}-${AWS::Region}-ppt"
       BucketEncryption:
         ServerSideEncryptionConfiguration:
         - ServerSideEncryptionByDefault:

@@ -18,6 +18,7 @@ Parameters:
     - dev
     - uat
     - prod
+    - svil
 
   DomainName:
     Description: The Domain Name

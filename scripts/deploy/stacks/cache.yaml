@@ -18,6 +18,7 @@ Parameters:
     - dev
     - uat
     - prod
+    - svil
 
   NodeType:
     Default: cache.t3.small

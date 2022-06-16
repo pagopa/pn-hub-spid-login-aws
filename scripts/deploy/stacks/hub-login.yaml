@@ -18,6 +18,7 @@ Parameters:
     - dev
     - uat
     - prod
+    - svil
 
   Name:
     Default: hub-login

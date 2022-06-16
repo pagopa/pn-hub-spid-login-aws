@@ -104,6 +104,7 @@ Parameters:
     - dev
     - uat
     - prod
+    - svil
 
   Storage:
     AllowedPattern: ^((?!xn--)(?!.*-s3alias)[a-z0-9][a-z0-9-]{1,61}[a-z0-9])$

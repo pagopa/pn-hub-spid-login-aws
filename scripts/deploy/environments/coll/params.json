@@ -1,0 +1,20 @@
+{
+  "Parameters": {
+    "Project": "spidhub",
+    "Environment": "coll",
+    "Storage": "spidhub-coll-eu-south-1-ppt",
+    "FrontEndVpcId":"Id della VPC PAGOPA-CORENETWORK-INGRESS-SVIL-VPC",
+    "BackEndVpcId":"Id della VPC PAGOPA-SVIL-PNCORE-VPC",
+    "FrontEndSubnets": "Id delle sottoreti nella VPC PAGOPA-CORENETWORK-INGRESS-SVIL-VPC",
+    "BackEndSubnets": "Id delle sottoreti nella VPC PAGOPA-SVIL-PNCORE-VPC",
+    "DomainName": "ecs.coll.pn.pagopa.it",
+    "HostedZoneId": "hosted zone id che gestisce il dominio coll.pn.pagopa.it",
+    "HubLoginVersion": "3.0.0-alpha.3",
+    "HubLoginConfigVersion": "v1",
+    "HubLoginSecrets": "spidhub-coll-hub-login",
+    "SpidSamlCheckVersion": "v.1.8.3-snapshot",
+    "SpidSamlCheckConfigVersion": "v1",
+    "WellKnownConfigVersion": "v1"
+  },
+  "StackPolicy": {}
+}

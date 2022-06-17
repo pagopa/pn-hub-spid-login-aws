@@ -19,6 +19,7 @@ Parameters:
     - uat
     - prod
     - svil
+    - coll
 
   DomainName:
     Description: The Domain Name

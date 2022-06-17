@@ -19,6 +19,7 @@ Parameters:
     - uat
     - prod
     - svil
+    - coll
 
   StorageKMSKey:
     Default: alias/aws/s3

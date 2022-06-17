@@ -19,6 +19,7 @@ Parameters:
     - uat
     - prod
     - svil
+    - coll
 
   Name:
     Default: hub-login

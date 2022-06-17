@@ -19,6 +19,7 @@ Parameters:
     - uat
     - prod
     - svil
+    - coll
 
   NodeType:
     Default: cache.t3.small

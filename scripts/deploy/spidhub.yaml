@@ -130,7 +130,6 @@ Parameters:
   
   InternalNlbIps:
     Description: The list of ips of the internal network load balancer
-    Default: '10.2.63.200,10.2.127.200,10.2.191.200'
     Type: String
   
 

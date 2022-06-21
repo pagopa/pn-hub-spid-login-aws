@@ -35,7 +35,7 @@ Resources:
     UpdateReplacePolicy: Retain
     Properties:
       BucketName:
-        Fn::Sub: "${Project}-${Environment}-${AWS::Region}-ppt"
+        Fn::Sub: "${Project}-${Environment}-${AWS::Region}-pptt"
       BucketEncryption:
         ServerSideEncryptionConfiguration:
         - ServerSideEncryptionByDefault:

@@ -26,7 +26,7 @@ UserRegistryApiKey=$4
 
 PROJECT=spidhub
 STACK_NAME=spidhub
-PACKAGE_BUCKET=$PROJECT-$ENVIRONMENT-$AWS_REGION-ppt
+PACKAGE_BUCKET=$PROJECT-$ENVIRONMENT-$AWS_REGION-pptt
 PACKAGE_PREFIX=package
 
 secretPresent=$( aws \
@@ -94,7 +94,7 @@ aws \
   --region "$AWS_REGION" \
   s3 sync \
   ./environments/$ENVIRONMENT/storage/ \
-  s3://$PROJECT-$ENVIRONMENT-$AWS_REGION-ppt/ \
+  s3://$PROJECT-$ENVIRONMENT-$AWS_REGION-pptt/ \
   --delete
 
 aws \

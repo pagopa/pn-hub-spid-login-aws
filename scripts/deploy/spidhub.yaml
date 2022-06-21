@@ -282,6 +282,8 @@ Resources:
         Subnets: !Ref BackEndSubnets
       TemplateURL: ./stacks/cache.yaml
 
+  # FIXME: Per gli ambienti non produzione esiste una dipendenza non dichiarata 
+  #        da HubLogin a SpidSamlCheck che costringe a un riavvio.
   HubLogin:
     Type: AWS::CloudFormation::Stack
     Properties:

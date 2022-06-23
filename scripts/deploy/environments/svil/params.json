@@ -15,7 +15,9 @@
     "HubLoginSecrets": "spidhub-svil-hub-login",
     "SpidSamlCheckVersion": "v.1.8.3-snapshot",
     "SpidSamlCheckConfigVersion": "v1",
-    "WellKnownConfigVersion": "v1"
+    "WellKnownConfigVersion": "v1",
+    "CacheNumberReplicas": "1",
+    "CacheNodeType": "cache.t3.small"
   },
   "StackPolicy": {}
 }

@@ -1,4 +1,3 @@
----
 AWSTemplateFormatVersion: '2010-09-09'
 Description: SPID Hub
 
@@ -20,6 +19,11 @@ Metadata:
       - BackEndVpcId
       - FrontEndSubnets
       - BackEndSubnets
+    - Label:
+        default: Cache
+      Parameters:
+      - CacheNumberReplicas
+      - CacheNodeType
       # - CIDRVPC
       # - CIDRBackEndA
       # - CIDRBackEndB
@@ -47,6 +51,10 @@ Metadata:
         default: Comma separated list of front-end subnets ids
       BackEndSubnets:
         default: Comma separated list of back-end subnets ids
+      CacheNumberReplicas:
+        default: Number of eplicas for Redis
+      CacheNodeType:
+        default: Instance Type for Redis
       # CIDRVPC:
       #   default: VPC CIDR
       # CIDRBackEndA:
@@ -127,10 +135,22 @@ Parameters:
   BackEndSubnets:
     Type: String
     Description: BackEnd subnets ids
-  
+
   InternalNlbIps:
     Description: The list of ips of the internal network load balancer
     Type: String
+
+  CacheNumberReplicas:
+    Type: String
+    Description: Number of Replicas for Redis
+    Default: 1
+
+  CacheNodeType:
+    Default: cache.t3.small
+    Description: The compute and memory capacity of the nodes
+    Type: String
+  
+
   
 
   # CIDRVPC:
@@ -275,15 +295,18 @@ Resources:
   Cache:
     Type: AWS::CloudFormation::Stack
     Properties:
-      Parameters:
+      Parameters:        
         Project: !Ref Project
         Environment: !Ref Environment
         VpcId: !Ref BackEndVpcId
         Subnets: !Ref BackEndSubnets
+        CacheNumberReplicas: !Ref CacheNumberReplicas
+        CacheNodeType: !Ref CacheNodeType
       TemplateURL: ./stacks/cache.yaml
 
   # FIXME: Per gli ambienti non produzione esiste una dipendenza non dichiarata 
   #        da HubLogin a SpidSamlCheck che costringe a un riavvio.
+  # https://pagopa.atlassian.net/browse/PT-12
   HubLogin:
     Type: AWS::CloudFormation::Stack
     Properties:

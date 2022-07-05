@@ -1,5 +1,5 @@
 {
-  "host": "https://spid-saml-check.ecs.svil.pn.pagopa.it",
+  "host": "https://spid-saml-check.ecs.dev.pn.pagopa.it",
   "port": 8080,
   "useProxy": true,
   "useHttps": false

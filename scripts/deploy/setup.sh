@@ -94,7 +94,7 @@ aws \
   --region "$AWS_REGION" \
   s3 sync \
   ./environments/$ENVIRONMENT/storage/ \
-  s3://$PROJECT-$ENVIRONMENT-$AWS_REGION-pptt/ \
+  s3://$PACKAGE_BUCKET/ \
   --delete
 
 aws \

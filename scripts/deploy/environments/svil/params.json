@@ -1,0 +1,23 @@
+{
+  "Parameters": {
+    "Project": "spidhub",
+    "Environment": "svil",
+    "Storage": "spidhub-svil-eu-south-1-ppt",
+    "FrontEndVpcId":"vpc-0b2678b596a1cc1c3",
+    "BackEndVpcId":"vpc-0481e419f6467daa9",
+    "FrontEndSubnets": "subnet-0c20dc5232c3df75a,subnet-0c1df1267d77c1e92,subnet-075f49d9f787e18de",
+    "BackEndSubnets": "subnet-0ec2b4cab530bc74a,subnet-01a744f9d40f77ad6,subnet-0e16b812cf75d5158",
+    "InternalNlbIps": "10.2.63.200,10.2.127.200,10.2.191.200",
+    "DomainName": "ecs.svil.pn.pagopa.it",
+    "HostedZoneId": "Z08035123HZSLKM6HYHUT",
+    "HubLoginVersion": "3.0.0-alpha.3",
+    "HubLoginConfigVersion": "v1",
+    "HubLoginSecrets": "spidhub-svil-hub-login",
+    "SpidSamlCheckVersion": "v.1.8.3-snapshot",
+    "SpidSamlCheckConfigVersion": "v1",
+    "WellKnownConfigVersion": "v1",
+    "CacheNumberReplicas": "1",
+    "CacheNodeType": "cache.t3.small"
+  },
+  "StackPolicy": {}
+}

@@ -390,3 +390,27 @@ Resources:
       LogGroupName:
         Fn::Sub: "${Project}-${Environment}-${Name}"
       RetentionInDays: 14
+
+  SamlAssertionLogBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      AccessControl: Private
+      BucketName: !Sub '${Project}-${Environment}-${Name}-SAML-assertions'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: 'aws:kms'
+              KMSMasterKeyID: KMS-KEY-ARN
+            BucketKeyEnabled: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: Retention24Month
+            ExpirationInDays: 730
+            Status: Enabled
+Outputs:
+  SamlAssertionLogBucket:
+    Description: The ARN of the SAML Assertion Bucket
+    Value:
+      Ref: SamlAssertionLogBucket

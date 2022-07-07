@@ -114,6 +114,9 @@ Resources:
           Value: 'false'
         - Name: REDIS_TLS_ENABLED
           Value: 'true'
+        - Name: SPID_LOGS_STORAGE_CONTAINER_NAME
+          Value:
+            Ref: SamlAssertionLogBucket
         EnvironmentFiles:
         - Type: s3
           Value:
@@ -144,6 +147,9 @@ Resources:
         - Name: USER_REGISTRY_API_KEY
           ValueFrom:
             Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:${Secrets}:UserRegistryApiKey:AWSCURRENT:"
+        - Name: SPID_LOGS_PUBLIC_KEY
+          ValueFrom:
+            Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:${Secrets}:LogsPublicKey:AWSCURRENT:"
         - Name: REDIS_PASSWORD
           ValueFrom:
             Fn::Sub: "${RedisSecret}:AuthToken:AWSCURRENT:"
@@ -209,11 +215,11 @@ Resources:
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      HealthCheckIntervalSeconds: 30
+      HealthCheckIntervalSeconds: 60
       HealthCheckProtocol: HTTP
       HealthCheckPath: /healthcheck
       HealthCheckTimeoutSeconds: 5
-      HealthyThresholdCount: 3
+      HealthyThresholdCount: 5
       Matcher:
         HttpCode: 200
       Port:
@@ -229,7 +235,7 @@ Resources:
       - Key: slow_start.duration_seconds
         Value: '30'
       TargetType: ip
-      UnhealthyThresholdCount: 3
+      UnhealthyThresholdCount: 6
       VpcId:
         Ref: VpcId
 
@@ -310,10 +316,6 @@ Resources:
             Service:
             - ecs-tasks.amazonaws.com
           Action: sts:AssumeRole
-          Condition:
-            StringEquals:
-              aws:SourceAccount:
-                Ref: AWS::AccountId
 
   ExecuteCommand:
     Type: AWS::IAM::ManagedPolicy
@@ -331,6 +333,21 @@ Resources:
           - ssmmessages:OpenControlChannel
           - ssmmessages:OpenDataChannel
           Resource: "*"
+
+  S3Objects:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Put files to S3
+      Roles:
+      - Ref: Role
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - s3:PutObject
+          Resource:
+          - Fn::Sub: "arn:aws:s3:::${SamlAssertionLogBucket}/*"
 
   TaskExecutionRole:
     Type: AWS::IAM::Role
@@ -391,24 +408,66 @@ Resources:
         Fn::Sub: "${Project}-${Environment}-${Name}"
       RetentionInDays: 14
 
+  SamlAssertionLogBucketKey:
+    Type: AWS::KMS::Key
+    Properties:
+      Enabled: true
+      EnableKeyRotation: true
+      KeySpec: SYMMETRIC_DEFAULT
+      KeyUsage: ENCRYPT_DECRYPT
+      MultiRegion: false
+      PendingWindowInDays: 7
+      KeyPolicy:
+        Version: '2012-10-17'
+        Id: auto-s3-2
+        Statement:
+        - Sid: Allow access through S3 for all principals authorized to use S3
+          Effect: Allow
+          Principal:
+            AWS: "*"
+          Action:
+          - kms:Encrypt
+          - kms:Decrypt
+          - kms:ReEncrypt*
+          - kms:GenerateDataKey*
+          - kms:DescribeKey
+          Resource: "*"
+          Condition:
+            StringEquals:
+              kms:ViaService:
+                Fn::Sub: "s3.${AWS::Region}.amazonaws.com"
+              kms:CallerAccount:
+                Ref: AWS::AccountId
+        - Sid: Allow direct access to key metadata to the account
+          Effect: Allow
+          Principal:
+            AWS:
+              Fn::Sub: "arn:${AWS::Partition}:iam::${AWS::AccountId}:root"
+          Action:
+          - kms:*
+          Resource: "*"
+
   SamlAssertionLogBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
       AccessControl: Private
-      BucketName: !Sub '${Project}-${Environment}-${Name}-SAML-assertions'
+      BucketName:
+        Fn::Sub: "${Project}-${Environment}-${Name}-saml-assertions"
       BucketEncryption:
         ServerSideEncryptionConfiguration:
-          - ServerSideEncryptionByDefault:
-              SSEAlgorithm: 'aws:kms'
-              KMSMasterKeyID: KMS-KEY-ARN
-            BucketKeyEnabled: true
+        - ServerSideEncryptionByDefault:
+            SSEAlgorithm: aws:kms
+            KMSMasterKeyID:
+              Ref: SamlAssertionLogBucketKey
+          BucketKeyEnabled: true
       LifecycleConfiguration:
         Rules:
-          - Id: Retention24Month
-            ExpirationInDays: 730
-            Status: Enabled
+        - Id: Retention24Month
+          ExpirationInDays: 730
+          Status: Enabled
+
 Outputs:
   SamlAssertionLogBucket:
     Description: The ARN of the SAML Assertion Bucket

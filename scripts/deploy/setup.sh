@@ -46,10 +46,15 @@ if ( [ $secretPresent -eq 0 ] ) then
     -out "./environments/$ENVIRONMENT/certs/cert.pem"
 
   mkdir -p "./environments/$ENVIRONMENT/jwt"
+  mkdir -p "./environments/$ENVIRONMENT/logs"
 
   openssl genrsa -out "./environments/$ENVIRONMENT/jwt/jwt_rsa_key.pem" 2048
   openssl rsa -in "./environments/$ENVIRONMENT/jwt/jwt_rsa_key.pem" \
     -outform PEM -pubout -out "./environments/$ENVIRONMENT/jwt/jwt_rsa_public.pem"
+
+  openssl genrsa -out "./environments/$ENVIRONMENT/logs/logs_rsa_key.pem" 2048
+  openssl rsa -in "./environments/$ENVIRONMENT/logs/logs_rsa_key.pem" \
+    -outform PEM -pubout -out "./environments/$ENVIRONMENT/logs/logs_rsa_public.pem"
 
 #  UserRegistryApiKey=$(tr -d '\n' < "./environments/$ENVIRONMENT/UserRegistryApiKey.tmp")
   MakecertPrivate=$( sed -e 's/$/\\n/' "./environments/$ENVIRONMENT/certs/key.pem" | tr -d '\n' | sed -e 's/\\n$//')
@@ -57,10 +62,11 @@ if ( [ $secretPresent -eq 0 ] ) then
   JwtTokenPrivateKey=$( sed -e 's/$/\\n/' "./environments/$ENVIRONMENT/jwt/jwt_rsa_key.pem" | tr -d '\n' | sed -e 's/\\n$//' )
   Jwks=$(docker run -i --rm danedmunds/pem-to-jwk:latest --jwks-out < "./environments/$ENVIRONMENT/jwt/jwt_rsa_public.pem")
   Kid=$(echo "$Jwks" | jq -r '.keys[0].kid')
+  LogsPublicKey=$( sed -e 's/$/\\n/' "./environments/$ENVIRONMENT/logs/logs_rsa_public.pem" | tr -d '\n' | sed -e 's/\\n$//' )
 
   sed -i '' "/^JWT_TOKEN_KID=/s/=.*/=$Kid/" "./environments/$ENVIRONMENT/storage/config/hub-login/v1/.env"
 
-  SecretString=$(echo "{\"MakecertPrivate\":\"$MakecertPrivate\",\"MakecertPublic\":\"$MakecertPublic\",\"JwtTokenPrivateKey\":\"$JwtTokenPrivateKey\",\"UserRegistryApiKey\":\"$UserRegistryApiKey\"}" | jq --arg v "$Jwks" '. + {"Jwks":$v}')
+  SecretString=$(echo "{\"MakecertPrivate\":\"$MakecertPrivate\",\"MakecertPublic\":\"$MakecertPublic\",\"JwtTokenPrivateKey\":\"$JwtTokenPrivateKey\",\"UserRegistryApiKey\":\"$UserRegistryApiKey\",\"LogsPublicKey\":\"$LogsPublicKey\"}" | jq --arg v "$Jwks" '. + {"Jwks":$v}')
 
   aws \
     --profile "$AWS_PROFILE" \

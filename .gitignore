@@ -1,4 +1,4 @@
 *.tmp
 **/environments/**/certs
 **/environments/**/jwt
-/.idea/
+**/environments/**/logs

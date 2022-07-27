@@ -15,7 +15,7 @@
     "CIDRDataC": "10.100.22.0/24",
     "DomainName": "pn.pagopa.it",
     "HostedZoneId": "Z06512323MCQG5EQPAM4D",
-    "HubLoginVersion": "2.1.3",
+    "HubLoginVersion": "4.0.1-release",
     "HubLoginConfigVersion": "v1",
     "HubLoginSecrets": "spidhub-prod-hub-login",
     "SpidSamlCheckVersion": "v.1.8.3-snapshot",

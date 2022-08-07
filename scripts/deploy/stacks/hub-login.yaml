@@ -98,11 +98,13 @@ Resources:
     Properties:
       ContainerDefinitions:
       - Name: main
-        Image:
-          Fn::Sub: "ghcr.io/pagopa/hub-spid-login-ms:${Version}"
-        Cpu: 1
-        Memory: 256
-        MemoryReservation: 128
+        #Image: "balanza/test_toy_project_s3:latest"
+        Image: "balanza/hub-spid-login:latest"
+        #Image: !Sub "ghcr.io/pagopa/hub-spid-login-ms:${Version}"
+        #Image: "558518206506.dkr.ecr.eu-south-1.amazonaws.com/spidhubtruble-mvit:003"
+        Cpu: 1024
+        Memory: 2048
+        #MemoryReservation: 512
         Environment:
         - Name: REDIS_URL
           Value:
@@ -133,6 +135,8 @@ Resources:
         - ContainerPort:
             Ref: Port
           Protocol: tcp
+        LinuxParameters:
+          InitProcessEnabled: true
         Privileged: false
         Secrets:
         - Name: METADATA_PRIVATE_CERT
@@ -153,8 +157,8 @@ Resources:
         - Name: REDIS_PASSWORD
           ValueFrom:
             Fn::Sub: "${RedisSecret}:AuthToken:AWSCURRENT:"
-      Cpu: 256
-      Memory: 512
+      Cpu: 1024
+      Memory: 2048
       ExecutionRoleArn:
         Fn::GetAtt:
         - TaskExecutionRole
@@ -333,6 +337,10 @@ Resources:
           - ssmmessages:OpenControlChannel
           - ssmmessages:OpenDataChannel
           Resource: "*"
+        - Effect: Allow
+          Action:
+          - ecr:*
+          Resource: "*"
 
   S3Objects:
     Type: AWS::IAM::ManagedPolicy
@@ -454,7 +462,7 @@ Resources:
     Properties:
       AccessControl: Private
       BucketName:
-        Fn::Sub: "${Project}-${Environment}-${Name}-saml-assertions"
+        Fn::Sub: "${Project}-${Environment}-${Name}-saml-assertions-audit"
       BucketEncryption:
         ServerSideEncryptionConfiguration:
         - ServerSideEncryptionByDefault:

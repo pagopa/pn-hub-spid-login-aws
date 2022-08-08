@@ -35,7 +35,7 @@ Resources:
     UpdateReplacePolicy: Retain
     Properties:
       BucketName:
-        Fn::Sub: "${Project}-${Environment}-${AWS::Region}-pptt"
+        Fn::Sub: "${Project}-${Environment}-${AWS::Region}-spid"
       BucketEncryption:
         ServerSideEncryptionConfiguration:
         - ServerSideEncryptionByDefault:

@@ -1,4 +1,6 @@
-#!/usr/bin/env bash -ex
+#!/usr/bin/env bash
+
+set -ex
 
 if ( [ $# -ne 4 ] ) then
   echo "This script create a test spidhub instance"
@@ -26,7 +28,7 @@ UserRegistryApiKey=$4
 
 PROJECT=spidhub
 STACK_NAME=spidhub
-PACKAGE_BUCKET=$PROJECT-$ENVIRONMENT-$AWS_REGION-pptt
+PACKAGE_BUCKET=$PROJECT-$ENVIRONMENT-$AWS_REGION-spid
 PACKAGE_PREFIX=package
 
 secretPresent=$( aws \
@@ -37,6 +39,7 @@ secretPresent=$( aws \
   | jq -r ".SecretList | .[] | select(.Name==\"$PROJECT-$ENVIRONMENT-hub-login\")" | wc -l )
 
 
+hubLoginEnvFile="./environments/$ENVIRONMENT/storage/config/hub-login/v1/.env"
 if ( [ $secretPresent -eq 0 ] ) then
   mkdir -p "./environments/$ENVIRONMENT/certs"
 
@@ -64,7 +67,7 @@ if ( [ $secretPresent -eq 0 ] ) then
   Kid=$(echo "$Jwks" | jq -r '.keys[0].kid')
   LogsPublicKey=$( sed -e 's/$/\\n/' "./environments/$ENVIRONMENT/logs/logs_rsa_public.pem" | tr -d '\n' | sed -e 's/\\n$//' )
 
-  sed -i '' "/^JWT_TOKEN_KID=/s/=.*/=$Kid/" "./environments/$ENVIRONMENT/storage/config/hub-login/v1/.env"
+  sed -i'.tmp' -e "/^JWT_TOKEN_KID=/s/=.*/=$Kid/" $hubLoginEnvFile 
 
   SecretString=$(echo "{\"MakecertPrivate\":\"$MakecertPrivate\",\"MakecertPublic\":\"$MakecertPublic\",\"JwtTokenPrivateKey\":\"$JwtTokenPrivateKey\",\"UserRegistryApiKey\":\"$UserRegistryApiKey\",\"LogsPublicKey\":\"$LogsPublicKey\"}" | jq --arg v "$Jwks" '. + {"Jwks":$v}')
 
@@ -82,7 +85,7 @@ else
     --no-paginate \
     --secret-id $PROJECT-$ENVIRONMENT-hub-login \
     --query SecretString --output text |  jq -r .Jwks | jq -r '.keys[0].kid')
-  sed -i '' "/^JWT_TOKEN_KID=/s/=.*/=$Kid/" "./environments/$ENVIRONMENT/storage/config/hub-login/v1/.env"
+  sed -i'.tmp' -e "/^JWT_TOKEN_KID=/s/=.*/=$Kid/" $hubLoginEnvFile
 fi
 
 aws \

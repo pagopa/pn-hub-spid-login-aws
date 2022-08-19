@@ -70,6 +70,24 @@ Parameters:
     Description: The Security Group from which incoming requests will arrive
     Type: AWS::EC2::SecurityGroup::Id
 
+  AlarmSNSTopicName:
+    Type: String
+    Description: "The name of an SNS topic where to send alarm." 
+
+  CPUUtilizationThreshold:
+    Description: The threshold percentage of CPU usage to raise alarm.
+    Type: Number
+
+  MemoryUtilizationThreshold:
+    Description: The threshold percentage of CPU usage to raise alarm.
+    Type: Number
+    Default: 70
+
+Conditions:
+  AlarmEnabled: !Not
+    - !Equals
+      - !Ref AlarmSNSTopicName
+      - ""
 
 Resources:
 
@@ -372,3 +390,57 @@ Resources:
       LogGroupName:
         Fn::Sub: "${Project}-${Environment}-${Name}"
       RetentionInDays: 14
+
+  ECSCPUUtilizationAlarm:
+    Condition: AlarmEnabled
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${Project}-${Environment}-spid-ecs-cpu-utilization
+      AlarmDescription: "CloudWatch alarm for SPID ECS CPU Utilization."
+      AlarmActions:
+        - !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}"
+      InsufficientDataActions:
+        - !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}"
+      OKActions:
+        - !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}"
+      DatapointsToAlarm: 1
+      Dimensions:
+        - Name: ClusterName
+          Value: !Ref Cluster
+        - Name: ServiceName
+          Value: !GetAtt Service.Name
+      MetricName: CPUUtilization
+      Namespace: AWS/ECS
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      EvaluationPeriods: 60
+      Period: 60
+      Statistic: Sum
+      Threshold: !Ref CPUUtilizationThreshold
+      TreatMissingData: missing
+
+  ECSMemoryUtilizationAlarm:
+    Condition: AlarmEnabled
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${Project}-${Environment}-spid-ecs-memory-utilization
+      AlarmDescription: "CloudWatch alarm for SPID ECS Memory Utilization."
+      AlarmActions:
+        - !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}"
+      InsufficientDataActions:
+        - !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}"
+      OKActions:
+        - !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}"
+      DatapointsToAlarm: 1
+      Dimensions:
+        - Name: ClusterName
+          Value: !Ref Cluster
+        - Name: ServiceName
+          Value: !GetAtt Service.Name
+      MetricName: MemoryUtilization
+      Namespace: AWS/ECS
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      EvaluationPeriods: 60
+      Period: 60
+      Statistic: Sum
+      Threshold: !Ref MemoryUtilizationThreshold
+      TreatMissingData: missing

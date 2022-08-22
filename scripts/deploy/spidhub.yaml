@@ -248,7 +248,13 @@ Parameters:
     Type: String
     Description: "A name of an SNS topic where to send alarm." 
 
+  CPUUtilizationThreshold:
+    Type: Number
+    Default: 60
 
+  MemoryUsedThreshold:
+    Type: Number
+    Default: 60
 
 Resources:
 
@@ -296,6 +302,8 @@ Resources:
         ExternalVpcId: !Ref FrontEndVpcId
         ExternalSubnets: !Ref FrontEndSubnets
         AlarmSNSTopicName: !Ref AlarmSNSTopicName
+        CPUUtilizationThreshold: !Ref CPUUtilizationThreshold
+        MemoryUtilizationThreshold: !Ref MemoryUsedThreshold
       TemplateURL: ./stacks/orchestrator.yaml
 
   Cache:
@@ -309,6 +317,9 @@ Resources:
         CacheNumberReplicas: !Ref CacheNumberReplicas
         CacheNodeType: !Ref CacheNodeType
         AlarmSNSTopicName: !Ref AlarmSNSTopicName
+        CPUUtilizationThreshold: !Ref CPUUtilizationThreshold
+        EngineCPUUtilizationThreshold: !Ref CPUUtilizationThreshold
+        RedisMemoryUsedThreshold: !Ref MemoryUsedThreshold
       TemplateURL: ./stacks/cache.yaml
 
   # FIXME: Per gli ambienti non produzione esiste una dipendenza non dichiarata 
@@ -362,6 +373,8 @@ Resources:
           - Cache
           - Outputs.AuthSecret
         AlarmSNSTopicName: !Ref AlarmSNSTopicName
+        CPUUtilizationThreshold: !Ref CPUUtilizationThreshold
+        MemoryUtilizationThreshold: !Ref MemoryUsedThreshold
       TemplateURL: ./stacks/hub-login.yaml
 
   SpidSamlCheck:
@@ -398,6 +411,8 @@ Resources:
           - Orchestrator
           - Outputs.AlbSecurityGroup
         AlarmSNSTopicName: !Ref AlarmSNSTopicName
+        CPUUtilizationThreshold: !Ref CPUUtilizationThreshold
+        MemoryUtilizationThreshold: !Ref MemoryUsedThreshold
       TemplateURL: ./stacks/spid-saml-check.yaml
 
   WellKnown:

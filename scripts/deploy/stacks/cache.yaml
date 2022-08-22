@@ -47,24 +47,28 @@ Parameters:
     Description: The threshold percentage of CPU usage.
     MinValue: 0
     MaxValue: 100
+    Default: 60
 
   EngineCPUUtilizationThreshold:
     Type: Number
     Description: The threshold percentage of CPU utilization of the Redis engine thread
     MinValue: 0
     MaxValue: 100
+    Default: 60
 
   RedisMemoryUsedThreshold:
     Type: Number
     Description: The threshold percentage for the amount of memory utilized.
     MinValue: 0
     MaxValue: 100
+    Default: 60
 
   CurrentConnectionsThreshold:
     Type: Number
     Description: "The threshold number of concurrent and active connections. (Max connections: 65000)."
     MinValue: 0
     MaxValue: 65000
+    Default: 60000
 
 Conditions:
   AlarmEnabled: !Not

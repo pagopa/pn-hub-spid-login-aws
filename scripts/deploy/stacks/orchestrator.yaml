@@ -58,10 +58,16 @@ Parameters:
   CPUUtilizationThreshold:
     Description: The threshold percentage of CPU usage to raise alarm.
     Type: Number
+    MinValue: 0
+    MaxValue: 100
+    Default: 60
 
   MemoryUtilizationThreshold:
     Description: The threshold percentage of CPU usage to raise alarm.
     Type: Number
+    MinValue: 0
+    MaxValue: 100
+    Default: 60
 
 Conditions:
   AlarmEnabled: !Not

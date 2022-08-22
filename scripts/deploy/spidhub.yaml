@@ -243,6 +243,11 @@ Parameters:
     AllowedPattern: ^v[0-9\.]+$
     Description: The configuration version to get from the storage
     Type: String
+  
+  AlarmSNSTopicName:
+    Type: String
+    Description: "A name of an SNS topic where to send alarm." 
+
 
 
 Resources:
@@ -290,6 +295,7 @@ Resources:
         InternalNlbIps: !Ref InternalNlbIps
         ExternalVpcId: !Ref FrontEndVpcId
         ExternalSubnets: !Ref FrontEndSubnets
+        AlarmSNSTopicName: !Ref AlarmSNSTopicName
       TemplateURL: ./stacks/orchestrator.yaml
 
   Cache:
@@ -302,6 +308,7 @@ Resources:
         Subnets: !Ref BackEndSubnets
         CacheNumberReplicas: !Ref CacheNumberReplicas
         CacheNodeType: !Ref CacheNodeType
+        AlarmSNSTopicName: !Ref AlarmSNSTopicName
       TemplateURL: ./stacks/cache.yaml
 
   # FIXME: Per gli ambienti non produzione esiste una dipendenza non dichiarata 
@@ -354,6 +361,7 @@ Resources:
           Fn::GetAtt:
           - Cache
           - Outputs.AuthSecret
+        AlarmSNSTopicName: !Ref AlarmSNSTopicName
       TemplateURL: ./stacks/hub-login.yaml
 
   SpidSamlCheck:
@@ -389,6 +397,7 @@ Resources:
           Fn::GetAtt:
           - Orchestrator
           - Outputs.AlbSecurityGroup
+        AlarmSNSTopicName: !Ref AlarmSNSTopicName
       TemplateURL: ./stacks/spid-saml-check.yaml
 
   WellKnown:

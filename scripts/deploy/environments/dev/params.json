@@ -18,7 +18,7 @@
     "WellKnownConfigVersion": "v1",
     "CacheNumberReplicas": "1",
     "CacheNodeType": "cache.t3.small",
-    "AlarmSNSTopicName": ""
+    "AlarmSNSTopicName": "once-dev-AlarmSNSTopic-C1V2JD035D3L"
   },
   "StackPolicy": {}
 }

@@ -387,6 +387,31 @@ Resources:
       Threshold: !Ref MemoryUtilizationThreshold
       TreatMissingData: missing
 
+  ApplicationLoadBalancerAlarm:
+    Condition: AlarmEnabled
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${Project}-${Environment}-ExternalALBAlarm"
+      AlarmDescription: "CloudWatch alarm when an application load balancer respond with a HTTP status 500."
+      AlarmActions:
+        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
+      InsufficientDataActions:
+        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
+      OKActions:
+        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
+      DatapointsToAlarm: 1
+      Dimensions:
+        - Name: LoadBalancer
+          Value: !GetAtt ExternalApplicationLoadBalancer.LoadBalancerFullName
+      MetricName: HTTPCode_ELB_5XX_Count
+      Namespace: AWS/ApplicationELB
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      EvaluationPeriods: 1
+      Period: 60
+      Statistic: Sum
+      Threshold: 1
+      TreatMissingData: notBreaching
+
 Outputs:
 
   Cluster:

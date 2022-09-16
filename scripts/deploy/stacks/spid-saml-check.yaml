@@ -20,6 +20,7 @@ Parameters:
     - prod
     - svil
     - coll
+    - cert
 
   Name:
     Default: spid-saml-check

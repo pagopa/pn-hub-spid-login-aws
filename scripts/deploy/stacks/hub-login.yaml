@@ -126,7 +126,7 @@ Mappings:
     dev:
       "Mode": "NONE"
     svil:
-      "Mode": "NONE" 
+      "Mode": "GOVERNANCE" 
     cert: 
       "Mode": "GOVERNANCE"               
     uat: 
@@ -137,11 +137,12 @@ Mappings:
       "Mode": "COMPLIANCE"
 
 Conditions:
+  IsSvil: !Equals [!Ref Environment, "svil"]
   IsProd: !Equals [!Ref Environment, "prod"]
   IsColl: !Equals [!Ref Environment, "coll"]
   IsUat: !Equals [!Ref Environment, "uat"]
   IsCert: !Equals [!Ref Environment, "cert"]
-  IsObjectLockEnabled: !Or [ Condition: IsProd, Condition: IsColl, Condition: IsUat, Condition: IsCert ]      
+  IsObjectLockEnabled: !Or [ Condition: IsProd, Condition: IsColl, Condition: IsUat, Condition: IsCert, Condition: IsSvil ] 
   
   AlarmEnabled: !Not
     - !Equals

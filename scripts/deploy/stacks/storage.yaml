@@ -20,6 +20,7 @@ Parameters:
     - prod
     - svil
     - coll
+    - cert
 
   StorageKMSKey:
     Default: alias/aws/s3

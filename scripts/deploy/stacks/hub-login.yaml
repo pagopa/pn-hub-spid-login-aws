@@ -20,6 +20,7 @@ Parameters:
     - prod
     - svil
     - coll
+    - cert
 
   Name:
     Default: hub-login
@@ -107,8 +108,42 @@ Parameters:
     MinValue: 0
     MaxValue: 100
     Default: 60
+  
+  BucketLifecycleRetentionExpirationInDays:
+    Default: 15
+    Description: Il numero di giorni dopo la creazione quando gli oggetti vengono eliminati da Amazon S3 e Amazon S3 Glacier. Questo vale per l'ambiente DEV, SVIL, UAT e COLL
+    Type: Number
+
+  BucketLifecycleRetentionExpirationInDaysProd:
+    Default: 731
+    Description: Il numero di giorni dopo la creazione quando gli oggetti vengono eliminati da Amazon S3 e Amazon S3 Glacier. Questo vale per l'ambiente PROD
+    Type: Number
+
+  
+## Note: When adding a new Environment that requires Object Lock Enabled please remember to add the same in the mapping bellow as well as condition.
+Mappings: 
+  RetentionModeMap:
+    dev:
+      "Mode": "NONE"
+    svil:
+      "Mode": "GOVERNANCE" 
+    cert: 
+      "Mode": "GOVERNANCE"               
+    uat: 
+      "Mode": "GOVERNANCE"
+    coll: 
+      "Mode": "GOVERNANCE"
+    prod: 
+      "Mode": "COMPLIANCE"
 
 Conditions:
+  IsSvil: !Equals [!Ref Environment, "svil"]
+  IsProd: !Equals [!Ref Environment, "prod"]
+  IsColl: !Equals [!Ref Environment, "coll"]
+  IsUat: !Equals [!Ref Environment, "uat"]
+  IsCert: !Equals [!Ref Environment, "cert"]
+  IsObjectLockEnabled: !Or [ Condition: IsProd, Condition: IsColl, Condition: IsUat, Condition: IsCert, Condition: IsSvil ] 
+  
   AlarmEnabled: !Not
     - !Equals
       - !Ref AlarmSNSTopicName
@@ -493,9 +528,23 @@ Resources:
           BucketKeyEnabled: true
       LifecycleConfiguration:
         Rules:
-        - Id: Retention24Month
-          ExpirationInDays: 730
-          Status: Enabled
+          - Id: !Sub RetentionPeriod-${Project}-${Environment}
+            ExpirationInDays: !If [IsProd, !Ref BucketLifecycleRetentionExpirationInDaysProd, !Ref BucketLifecycleRetentionExpirationInDays]
+            Status: Enabled
+      ObjectLockEnabled:
+        Fn::If:
+        - IsObjectLockEnabled
+        - True
+        - !Ref "AWS::NoValue"        
+      ObjectLockConfiguration:
+        Fn::If:
+        - IsObjectLockEnabled
+        - ObjectLockEnabled: Enabled 
+          Rule:
+            DefaultRetention:
+              Days: !If [IsProd, !Ref BucketLifecycleRetentionExpirationInDaysProd, !Ref BucketLifecycleRetentionExpirationInDays]
+              Mode: !FindInMap [RetentionModeMap, !Ref Environment, Mode]
+        - !Ref "AWS::NoValue"      
 
   ECSCPUUtilizationAlarm:
     Condition: AlarmEnabled

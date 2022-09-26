@@ -93,7 +93,7 @@ Parameters:
 
   AlarmSNSTopicName:
     Type: String
-    Description: "The name of an SNS topic where to send alarm." 
+    Description: "The name of an SNS topic where to send alarm."
 
   CPUUtilizationThreshold:
     Description: The threshold percentage of CPU usage to raise alarm.
@@ -108,7 +108,7 @@ Parameters:
     MinValue: 0
     MaxValue: 100
     Default: 60
-  
+
   BucketLifecycleRetentionExpirationInDays:
     Default: 15
     Description: Il numero di giorni dopo la creazione quando gli oggetti vengono eliminati da Amazon S3 e Amazon S3 Glacier. Questo vale per l'ambiente DEV, SVIL, UAT e COLL
@@ -119,21 +119,21 @@ Parameters:
     Description: Il numero di giorni dopo la creazione quando gli oggetti vengono eliminati da Amazon S3 e Amazon S3 Glacier. Questo vale per l'ambiente PROD
     Type: Number
 
-  
+
 ## Note: When adding a new Environment that requires Object Lock Enabled please remember to add the same in the mapping bellow as well as condition.
-Mappings: 
+Mappings:
   RetentionModeMap:
     dev:
       "Mode": "NONE"
     svil:
-      "Mode": "GOVERNANCE" 
-    cert: 
-      "Mode": "GOVERNANCE"               
-    uat: 
       "Mode": "GOVERNANCE"
-    coll: 
+    cert:
       "Mode": "GOVERNANCE"
-    prod: 
+    uat:
+      "Mode": "GOVERNANCE"
+    coll:
+      "Mode": "GOVERNANCE"
+    prod:
       "Mode": "COMPLIANCE"
 
 Conditions:
@@ -142,8 +142,8 @@ Conditions:
   IsColl: !Equals [!Ref Environment, "coll"]
   IsUat: !Equals [!Ref Environment, "uat"]
   IsCert: !Equals [!Ref Environment, "cert"]
-  IsObjectLockEnabled: !Or [ Condition: IsProd, Condition: IsColl, Condition: IsUat, Condition: IsCert, Condition: IsSvil ] 
-  
+  IsObjectLockEnabled: !Or [ Condition: IsProd, Condition: IsColl, Condition: IsUat, Condition: IsCert, Condition: IsSvil ]
+
   AlarmEnabled: !Not
     - !Equals
       - !Ref AlarmSNSTopicName
@@ -156,8 +156,7 @@ Resources:
     Properties:
       ContainerDefinitions:
       - Name: main
-        Image: "balanza/hub-spid-login:latest"
-        #Image: !Sub "ghcr.io/pagopa/hub-spid-login-ms:${Version}"
+        Image: !Sub "ghcr.io/pagopa/hub-spid-login-ms:${Version}"
         Cpu: 1024
         Memory: 2048
         #MemoryReservation: 512
@@ -535,16 +534,16 @@ Resources:
         Fn::If:
         - IsObjectLockEnabled
         - True
-        - !Ref "AWS::NoValue"        
+        - !Ref "AWS::NoValue"
       ObjectLockConfiguration:
         Fn::If:
         - IsObjectLockEnabled
-        - ObjectLockEnabled: Enabled 
+        - ObjectLockEnabled: Enabled
           Rule:
             DefaultRetention:
               Days: !If [IsProd, !Ref BucketLifecycleRetentionExpirationInDaysProd, !Ref BucketLifecycleRetentionExpirationInDays]
               Mode: !FindInMap [RetentionModeMap, !Ref Environment, Mode]
-        - !Ref "AWS::NoValue"      
+        - !Ref "AWS::NoValue"
 
   ECSCPUUtilizationAlarm:
     Condition: AlarmEnabled

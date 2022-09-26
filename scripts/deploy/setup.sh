@@ -98,6 +98,7 @@ aws \
   --tags Project=$PROJECT Environment=$ENVIRONMENT \
   --no-fail-on-empty-changeset
 
+
 aws \
   --profile "$AWS_PROFILE" \
   --region "$AWS_REGION" \
@@ -105,6 +106,31 @@ aws \
   ./environments/$ENVIRONMENT/storage/ \
   s3://$PACKAGE_BUCKET/ \
   --delete
+
+
+
+aws \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  cloudformation deploy \
+  --stack-name "$PROJECT-$ENVIRONMENT-alarm" \
+  --tags Project=$PROJECT Environment=$ENVIRONMENT \
+  --template-file "./stacks/alarm-topic/$ENVIRONMENT.yaml" \
+
+alarmName=$( aws \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  cloudformation describe-stacks \
+  --stack-name "$PROJECT-$ENVIRONMENT-alarm" \
+  | jq -r '.Stacks[0].Outputs | .[] | select ( .OutputKey=="AlarmSNSTopicName") | .OutputValue' \
+)
+
+echo ""
+echo ""
+echo "=== Alarm Name: ${alarmName}"
+cat "./environments/$ENVIRONMENT/params.json" \
+    | jq ".Parameters.AlarmSNSTopicName = \"${alarmName}\"" \
+    | tee "./environments/$ENVIRONMENT/params-enanched.json.tmp"
 
 aws \
   --profile "$AWS_PROFILE" \
@@ -120,7 +146,7 @@ aws \
   --region "$AWS_REGION" \
   cloudformation deploy \
   --stack-name "$PROJECT-$ENVIRONMENT" \
-  --parameter-overrides "file://environments/$ENVIRONMENT/params.json" \
+  --parameter-overrides "file://environments/$ENVIRONMENT/params-enanched.json.tmp" \
   --tags Project=$PROJECT Environment=$ENVIRONMENT \
   --template-file "./$STACK_NAME.tmp" \
   --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND \

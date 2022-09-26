@@ -3,13 +3,13 @@
     "Project": "spidhub",
     "Environment": "dev",
     "Storage": "spidhub-dev-eu-south-1-spid",
-    "FrontEndVpcId":"vpc-03ac7d8a11a29f82e",
-    "BackEndVpcId":"vpc-073b889f8459d6a2e",
-    "FrontEndSubnets": "subnet-08c2a05f4311d5fe5,subnet-0206a86806740dd68,subnet-09c4330580554a51b",
-    "BackEndSubnets": "subnet-0d8c229c7cfe0effd,subnet-0b83536bf40f562ac,subnet-00b535a1f39250db6",
-    "InternalNlbIps": "10.65.0.200,10.65.1.200,10.65.2.200",
+    "FrontEndVpcId":"vpc-06aaefbdb05e45fe5",
+    "BackEndVpcId":"vpc-081a06ed38c2f5213",
+    "FrontEndSubnets": "subnet-0374a30d998158753,subnet-0aac9573d93992aaa,subnet-0fe4bc12d2eb5b210",
+    "BackEndSubnets": "subnet-06c130dd8b94eecc8,subnet-0d90b7f9abf6e7134,subnet-04c8e1f242337b93f",
+    "InternalNlbIps": "10.32.0.200,10.32.1.200,10.32.2.200",
     "DomainName": "spid.dev.pn.pagopa.it",
-    "HostedZoneId": "Z08352821VPW98JJTNPF3",
+    "HostedZoneId": "Z0351442WB8RWGUHJSZ0",
     "HubLoginVersion": "4.0.1-release",
     "HubLoginConfigVersion": "v1",
     "HubLoginSecrets": "spidhub-dev-hub-login",
@@ -17,8 +17,7 @@
     "SpidSamlCheckConfigVersion": "v1",
     "WellKnownConfigVersion": "v1",
     "CacheNumberReplicas": "1",
-    "CacheNodeType": "cache.t3.small",
-    "AlarmSNSTopicName": "once-dev-AlarmSNSTopic-C1V2JD035D3L"
+    "CacheNodeType": "cache.t3.small"
   },
   "StackPolicy": {}
 }

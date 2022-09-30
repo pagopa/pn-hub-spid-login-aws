@@ -115,7 +115,7 @@ Parameters:
     Type: Number
 
   BucketLifecycleRetentionExpirationInDaysProd:
-    Default: 731
+    Default: 3653
     Description: Il numero di giorni dopo la creazione quando gli oggetti vengono eliminati da Amazon S3 e Amazon S3 Glacier. Questo vale per l'ambiente PROD
     Type: Number
 

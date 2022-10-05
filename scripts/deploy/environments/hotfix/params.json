@@ -1,0 +1,23 @@
+{
+  "Parameters": {
+    "Project": "spidhub",
+    "Environment": "hoxfix",
+    "Storage": "spidhub-hoxfix-eu-south-1-spid",
+    "FrontEndVpcId":"vpc-0b2678b596a1cc1c3",
+    "BackEndVpcId":"vpc-028d0feb791212eb3",
+    "FrontEndSubnets": "subnet-0c20dc5232c3df75a,subnet-075f49d9f787e18de,subnet-0c1df1267d77c1e92",
+    "BackEndSubnets": "subnet-01d988e18af1c138c,subnet-0fdf220191b1320e9,subnet-02b0a6e33b7a1b013",
+    "InternalNlbIps": "10.5.63.200,10.5.127.200,10.5.191.200",
+    "DomainName": "spid.hoxfix.pn.pagopa.it",
+    "HostedZoneId": "Z051129113N11IU530BLC",
+    "HubLoginVersion": "4.0.2-release",
+    "HubLoginConfigVersion": "v1",
+    "HubLoginSecrets": "spidhub-hoxfix-hub-login",
+    "SpidSamlCheckVersion": "v.1.8.3-snapshot",
+    "SpidSamlCheckConfigVersion": "v1",
+    "WellKnownConfigVersion": "v1",
+    "CacheNumberReplicas": "1",
+    "CacheNodeType": "cache.t3.small"
+  },
+  "StackPolicy": {}
+}

@@ -21,6 +21,7 @@ Parameters:
     - svil
     - coll
     - cert
+    - hotfix
 
   Name:
     Default: hub-login
@@ -133,6 +134,8 @@ Mappings:
       "Mode": "GOVERNANCE"
     coll:
       "Mode": "GOVERNANCE"
+    hotfix:
+      "Mode": "COMPLIANCE"      
     prod:
       "Mode": "COMPLIANCE"
 
@@ -142,7 +145,8 @@ Conditions:
   IsColl: !Equals [!Ref Environment, "coll"]
   IsUat: !Equals [!Ref Environment, "uat"]
   IsCert: !Equals [!Ref Environment, "cert"]
-  IsObjectLockEnabled: !Or [ Condition: IsProd, Condition: IsColl, Condition: IsUat, Condition: IsCert, Condition: IsSvil ]
+  IsHotfix: !Equals [!Ref Environment, "hotfix"]
+  IsObjectLockEnabled: !Or [ Condition: IsProd, Condition: IsHotfix, Condition: IsColl, Condition: IsUat, Condition: IsCert, Condition: IsSvil ]
 
   AlarmEnabled: !Not
     - !Equals

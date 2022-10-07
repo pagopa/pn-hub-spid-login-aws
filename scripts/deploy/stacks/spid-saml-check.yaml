@@ -21,6 +21,7 @@ Parameters:
     - svil
     - coll
     - cert
+    - hotfix
 
   Name:
     Default: spid-saml-check

@@ -21,6 +21,7 @@ Parameters:
     - svil
     - coll
     - cert
+    - hotfix
 
   DomainName:
     Description: The Domain Name

@@ -135,7 +135,7 @@ Mappings:
     coll:
       "Mode": "GOVERNANCE"
     hotfix:
-      "Mode": "COMPLIANCE"      
+      "Mode": "GOVERNANCE"      
     prod:
       "Mode": "COMPLIANCE"
 

@@ -21,6 +21,7 @@ Parameters:
     - svil
     - coll
     - cert
+    - hotfix
 
   StorageKMSKey:
     Default: alias/aws/s3

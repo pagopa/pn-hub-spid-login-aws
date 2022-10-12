@@ -1,0 +1,23 @@
+{
+  "Parameters": {
+    "Project": "spidhub",
+    "Environment": "hotfix",
+    "Storage": "spidhub-hotfix-eu-south-1-spid",
+    "FrontEndVpcId":"vpc-031bc2aae571088ff",
+    "BackEndVpcId":"vpc-0356c0fbe87785f3b",
+    "FrontEndSubnets": "subnet-0b435bab866c07296,subnet-0f7dcae436c3d176b,subnet-015f8941ef9c10213",
+    "BackEndSubnets": "subnet-0fcf4e1feed2c74cc,subnet-0f2c422868e42d5b3,subnet-0998d8820820e7fc5",
+    "InternalNlbIps": "10.66.0.200,10.66.1.200,10.66.2.200",
+    "DomainName": "spid.hotfix.pn.pagopa.it",
+    "HostedZoneId": "Z0795706253SJ98Y11DIL",
+    "HubLoginVersion": "4.0.2-release",
+    "HubLoginConfigVersion": "v1",
+    "HubLoginSecrets": "spidhub-hotfix-hub-login",
+    "SpidSamlCheckVersion": "v.1.8.3-snapshot",
+    "SpidSamlCheckConfigVersion": "v1",
+    "WellKnownConfigVersion": "v1",
+    "CacheNumberReplicas": "1",
+    "CacheNodeType": "cache.t3.small"
+  },
+  "StackPolicy": {}
+}

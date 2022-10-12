@@ -115,6 +115,7 @@ Parameters:
     - svil
     - coll
     - cert
+    - hotfix
 
   Storage:
     AllowedPattern: ^((?!xn--)(?!.*-s3alias)[a-z0-9][a-z0-9-]{1,61}[a-z0-9])$

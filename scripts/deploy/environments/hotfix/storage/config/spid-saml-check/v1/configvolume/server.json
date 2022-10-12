@@ -1,0 +1,6 @@
+{
+  "host": "https://spid-saml-check.spid.hotfix.pn.pagopa.it",
+  "port": 8080,
+  "useProxy": true,
+  "useHttps": false
+}

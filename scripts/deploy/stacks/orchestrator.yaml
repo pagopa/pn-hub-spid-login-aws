@@ -56,6 +56,12 @@ Parameters:
   AlarmSNSTopicName:
     Type: String
     Description: "The name of an SNS topic where to send alarm." 
+  
+  AlreadyCreatedCertificateArn:
+    Type: String
+    Default: ""
+    Description: |
+      If this parameter is passed the template do not create a new Certificate and use the existing one.
 
   CPUUtilizationThreshold:
     Description: The threshold percentage of CPU usage to raise alarm.
@@ -75,6 +81,11 @@ Conditions:
   AlarmEnabled: !Not
     - !Equals
       - !Ref AlarmSNSTopicName
+      - ""
+
+  HasAlreadyCreatedCertificateArn: !Not
+    - !Equals
+      - !Ref AlreadyCreatedCertificateArn
       - ""
 
 Resources:
@@ -248,7 +259,11 @@ Resources:
       SslPolicy: ELBSecurityPolicy-FS-1-2-Res-2020-10
       Certificates:
       - CertificateArn:
-          Ref: Certificate
+          Fn::If:
+            - HasAlreadyCreatedCertificateArn
+            - !Ref AlreadyCreatedCertificateArn 
+            - !Ref Certificate
+
   
   ExternalIpsTargetGroup:
     DependsOn:
@@ -288,6 +303,7 @@ Resources:
   
   Certificate:
     Type: AWS::CertificateManager::Certificate
+    Condition: HasAlreadyCreatedCertificateArn
     Properties:
       DomainName:
         Ref: DomainName

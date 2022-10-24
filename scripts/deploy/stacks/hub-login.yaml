@@ -146,8 +146,11 @@ Conditions:
   IsUat: !Equals [!Ref Environment, "uat"]
   IsCert: !Equals [!Ref Environment, "cert"]
   IsHotfix: !Equals [!Ref Environment, "hotfix"]
-  IsObjectLockEnabled: !Or [ Condition: IsProd, Condition: IsHotfix, Condition: IsColl, Condition: IsUat, Condition: IsCert, Condition: IsSvil ]
-
+  
+  # - Disabled condition. Wait for PN- resolution to uncomment original condition (second line).
+  IsObjectLockEnabled: !Equals [ "A", "B" ] 
+  # IsObjectLockEnabled: !Or [ Condition: IsProd, Condition: IsHotfix, Condition: IsColl, Condition: IsUat, Condition: IsCert, Condition: IsSvil ]
+  
   AlarmEnabled: !Not
     - !Equals
       - !Ref AlarmSNSTopicName
@@ -270,7 +273,7 @@ Resources:
       - Field: host-header
         HostHeaderConfig:
           Values:
-          - Fn::Sub: "${Name}.${DomainName}"
+          - Fn::Sub: "${Name}.*"
       ListenerArn:
         Ref: ListenerArn
       Priority: 30
@@ -520,8 +523,6 @@ Resources:
     UpdateReplacePolicy: Retain
     Properties:
       AccessControl: Private
-      BucketName:
-        Fn::Sub: "${Project}-${Environment}-${Name}-saml-assertions-audit"
       BucketEncryption:
         ServerSideEncryptionConfiguration:
         - ServerSideEncryptionByDefault:

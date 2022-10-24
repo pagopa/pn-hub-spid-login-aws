@@ -9,6 +9,7 @@
     "BackEndSubnets": "subnet-0fcf4e1feed2c74cc,subnet-0f2c422868e42d5b3,subnet-0998d8820820e7fc5",
     "InternalNlbIps": "10.66.0.200,10.66.1.200,10.66.2.200",
     "DomainName": "spid.hotfix.pn.pagopa.it",
+    "AlreadyCreatedCertificateArn": "arn:aws:acm:eu-south-1:907690015624:certificate/a5349f9a-bb14-42f8-825b-699888398fd7",
     "HostedZoneId": "Z0795706253SJ98Y11DIL",
     "HubLoginVersion": "4.0.2-release",
     "HubLoginConfigVersion": "v1",

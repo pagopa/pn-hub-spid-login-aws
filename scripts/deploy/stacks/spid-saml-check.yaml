@@ -64,6 +64,11 @@ Parameters:
     Description: The domain name
     Type: String
 
+  AlternativeDomainName:
+    Description: Alternative domain name (used for https connection)
+    Default: ''
+    Type: String
+
   VpcId:
     Description: The VPC in which deploy the service
     Type: AWS::EC2::VPC::Id
@@ -94,6 +99,11 @@ Conditions:
   AlarmEnabled: !Not
     - !Equals
       - !Ref AlarmSNSTopicName
+      - ""
+  
+  UseAlternativeDomainName: !Not
+    - !Equals
+      - !Ref AlternativeDomainName
       - ""
 
 Resources:
@@ -127,7 +137,10 @@ Resources:
         Image: bash
         Command:
         - -c
-        - Fn::Sub: "wget -O /tmp/bootstrap/sp-metadata.xml https://hub-login.${DomainName}/metadata"
+        - Fn::If:
+            - UseAlternativeDomainName
+            - Fn::Sub: "wget -O /tmp/bootstrap/sp-metadata.xml https://hub-login.${AlternativeDomainName}/metadata"
+            - Fn::Sub: "wget -O /tmp/bootstrap/sp-metadata.xml https://hub-login.${DomainName}/metadata"
         LogConfiguration:
           LogDriver: awslogs
           Options:
@@ -247,7 +260,7 @@ Resources:
       - Field: host-header
         HostHeaderConfig:
           Values:
-          - Fn::Sub: "${Name}.${DomainName}"
+          - Fn::Sub: "${Name}.*"
       ListenerArn:
         Ref: ListenerArn
       Priority: 20

@@ -219,6 +219,17 @@ Parameters:
     Description: The Domain Name
     Type: String
     AllowedPattern: ^(((?!-)[A-Za-z0-9-]{0,62}[A-Za-z0-9])\.)+((?!-)[A-Za-z0-9-]{1,62}[A-Za-z0-9])$
+  
+  AlternativeDomainName:
+    Description: Alternative domain name (used for https connection)
+    Default: ''
+    Type: String
+  
+  AlreadyCreatedCertificateArn:
+    Type: String
+    Default: ""
+    Description: |
+      If this parameter is passed the template do not create a new Certificate and use the existing one.
 
   HostedZoneId:
     Description: The ID of the Route 53 Hosted Zone
@@ -297,6 +308,7 @@ Resources:
         Project: !Ref Project
         Environment: !Ref Environment
         DomainName: !Ref DomainName
+        AlreadyCreatedCertificateArn: !Ref AlreadyCreatedCertificateArn
         HostedZoneId: !Ref HostedZoneId
         InternalVpcId: !Ref BackEndVpcId
         InternalSubnets: !Ref BackEndSubnets
@@ -392,6 +404,7 @@ Resources:
         Storage: !Ref Storage
         ConfigVersion: !Ref SpidSamlCheckConfigVersion
         DomainName: !Ref DomainName
+        AlternativeDomainName: !Ref AlternativeDomainName
         VpcId: !Ref BackEndVpcId
           #Fn::GetAtt:
           #- Network

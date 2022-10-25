@@ -87,6 +87,8 @@ Conditions:
     - !Equals
       - !Ref AlreadyCreatedCertificateArn
       - ""
+  
+  DoNotHaveAlreadyCreatedCertificateArn: !Not [ !Condition HasAlreadyCreatedCertificateArn ]
 
 Resources:
 
@@ -303,7 +305,7 @@ Resources:
   
   Certificate:
     Type: AWS::CertificateManager::Certificate
-    Condition: HasAlreadyCreatedCertificateArn
+    Condition: DoNotHaveAlreadyCreatedCertificateArn
     Properties:
       DomainName:
         Ref: DomainName

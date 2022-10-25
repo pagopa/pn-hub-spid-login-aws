@@ -220,6 +220,11 @@ Parameters:
     Type: String
     AllowedPattern: ^(((?!-)[A-Za-z0-9-]{0,62}[A-Za-z0-9])\.)+((?!-)[A-Za-z0-9-]{1,62}[A-Za-z0-9])$
   
+  AlternativeDomainName:
+    Description: Alternative domain name (used for https connection)
+    Default: ''
+    Type: String
+  
   AlreadyCreatedCertificateArn:
     Type: String
     Default: ""
@@ -399,6 +404,7 @@ Resources:
         Storage: !Ref Storage
         ConfigVersion: !Ref SpidSamlCheckConfigVersion
         DomainName: !Ref DomainName
+        AlternativeDomainName: !Ref AlternativeDomainName
         VpcId: !Ref BackEndVpcId
           #Fn::GetAtt:
           #- Network

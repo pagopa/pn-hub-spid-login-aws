@@ -77,6 +77,12 @@ Parameters:
     MaxValue: 100
     Default: 60
 
+  RequestPerIpLimit:
+    Type: Number
+    Description: The limit on requests per 5-minute period for a single originating IP address.
+    Default: 300
+
+
 Conditions:
   AlarmEnabled: !Not
     - !Equals
@@ -431,6 +437,40 @@ Resources:
       Statistic: Sum
       Threshold: 1
       TreatMissingData: notBreaching
+
+  # Associate Web ACLs with Rest API
+  ThrottlingToLoadBalancerAssociation:
+    Type: AWS::WAFv2::WebACLAssociation
+    Properties:
+      ResourceArn: !Ref ExternalApplicationLoadBalancer
+      WebACLArn: !GetAtt ThrottlingAcl.Arn
+
+  # AWS WAF Web ACLs
+  ThrottlingAcl:
+    Type: AWS::WAFv2::WebACL
+    Properties:
+      DefaultAction:
+        Allow: {}
+      Description: Throttling
+      Name: 'SpidHub_WAF'
+      Rules:
+        - Name: "Rate-based_Rule"
+          Priority: 0
+          Action:
+            Block: {}
+          Statement:
+            RateBasedStatement:
+              Limit: !Ref RequestPerIpLimit
+              AggregateKeyType: IP
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: "MetricForRateBasedRule"
+      Scope: "REGIONAL"
+      VisibilityConfig:
+        CloudWatchMetricsEnabled: true
+        MetricName: "MetricFor-SpidHub_WAF"
+        SampledRequestsEnabled: true
 
 Outputs:
 

@@ -152,6 +152,11 @@ Parameters:
     Description: The compute and memory capacity of the nodes
     Type: String
   
+  RequestPerIpLimit:
+    Type: Number
+    Description: The limit on requests per 5-minute period for a single originating IP address.
+    Default: 300
+  
 
   
 
@@ -318,6 +323,7 @@ Resources:
         AlarmSNSTopicName: !Ref AlarmSNSTopicName
         CPUUtilizationThreshold: !Ref CPUUtilizationThreshold
         MemoryUtilizationThreshold: !Ref MemoryUsedThreshold
+        RequestPerIpLimit: !Ref RequestPerIpLimit
       TemplateURL: ./stacks/orchestrator.yaml
 
   Cache:

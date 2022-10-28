@@ -147,9 +147,7 @@ Conditions:
   IsCert: !Equals [!Ref Environment, "cert"]
   IsHotfix: !Equals [!Ref Environment, "hotfix"]
   
-  # - Disabled condition. Wait for HSL-12 resolution to uncomment original condition (second line).
-  IsObjectLockEnabled: !Equals [ "A", "B" ] 
-  # IsObjectLockEnabled: !Or [ Condition: IsProd, Condition: IsHotfix, Condition: IsColl, Condition: IsUat, Condition: IsCert, Condition: IsSvil ]
+  IsObjectLockEnabled: !Or [ Condition: IsProd, Condition: IsHotfix, Condition: IsColl, Condition: IsUat, Condition: IsCert, Condition: IsSvil ]
   
   AlarmEnabled: !Not
     - !Equals

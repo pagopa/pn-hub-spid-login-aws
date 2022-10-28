@@ -10,7 +10,7 @@
     "InternalNlbIps": "10.10.63.200,10.10.127.200,10.10.191.200",
     "DomainName": "spid.coll.pn.pagopa.it",
     "HostedZoneId": "Z06253222RUWZFOJFRQF1",
-    "HubLoginVersion": "4.0.2-release",
+    "HubLoginVersion": "4.2.0-release",
     "HubLoginConfigVersion": "v1",
     "HubLoginSecrets": "spidhub-coll-hub-login",
     "SpidSamlCheckVersion": "v.1.8.3-snapshot",

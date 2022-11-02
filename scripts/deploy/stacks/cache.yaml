@@ -284,3 +284,7 @@ Outputs:
       Fn::GetAtt:
       - Redis
       - PrimaryEndPoint.Port
+
+  RedisClusterName:
+    Description: The redis cluster name
+    Value: !Sub ${Redis}

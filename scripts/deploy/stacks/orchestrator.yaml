@@ -363,56 +363,6 @@ Resources:
         Fn::Sub: "*.${DomainName}"
       Type: A
 
-  ECSCPUUtilizationAlarm:
-    Condition: AlarmEnabled
-    Type: AWS::CloudWatch::Alarm
-    Properties:
-      AlarmName: !Sub ${Project}-${Environment}-orchestrator-ecs-cpu-utilization
-      AlarmDescription: "CloudWatch alarm for spid hub Orchestrator ECS CPU Utilization."
-      AlarmActions: 
-        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
-      InsufficientDataActions:
-        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
-      OKActions:
-        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
-      DatapointsToAlarm: 1
-      Dimensions: 
-        - Name: ClusterName
-          Value: !Ref Cluster
-      MetricName: CPUUtilization
-      Namespace: AWS/ECS
-      ComparisonOperator: GreaterThanOrEqualToThreshold
-      EvaluationPeriods: 60
-      Period: 60
-      Statistic: Sum
-      Threshold: !Ref CPUUtilizationThreshold
-      TreatMissingData: missing
-
-  ECSMemoryUtilizationAlarm:
-    Condition: AlarmEnabled
-    Type: AWS::CloudWatch::Alarm
-    Properties:
-      AlarmName: !Sub ${Project}-${Environment}-orchestrator-ecs-memory-utilization
-      AlarmDescription: "CloudWatch alarm for spid hub Orchestrator ECS Memory Utilization."
-      AlarmActions: 
-        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
-      InsufficientDataActions:
-        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
-      OKActions:
-        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
-      DatapointsToAlarm: 1
-      Dimensions: 
-        - Name: ClusterName
-          Value: !Ref Cluster
-      MetricName: MemoryUtilization
-      Namespace: AWS/ECS
-      ComparisonOperator: GreaterThanOrEqualToThreshold
-      EvaluationPeriods: 60
-      Period: 60
-      Statistic: Sum
-      Threshold: !Ref MemoryUtilizationThreshold
-      TreatMissingData: missing
-
   ApplicationLoadBalancerAlarm:
     Condition: AlarmEnabled
     Type: AWS::CloudWatch::Alarm
@@ -483,6 +433,10 @@ Outputs:
     Description: SecurityGroup of the ALB
     Value:
       Ref: InternalAlbSecurityGroup
+
+  ExternalALBFullName:
+    Description: External ALB full name
+    Value: !GetAtt ExternalApplicationLoadBalancer.LoadBalancerFullName
 
   ListenerHttps:
     Description: HTTPS Listerner for ALB

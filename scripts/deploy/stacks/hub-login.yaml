@@ -602,8 +602,50 @@ Resources:
       Threshold: !Ref MemoryUtilizationThreshold
       TreatMissingData: missing
 
+  # CloudWatch metric to filer ERROR lines, in Log group
+  ErrorLogsMetricFilter: 
+    Condition: AlarmEnabled
+    Type: AWS::Logs::MetricFilter
+    Properties: 
+      LogGroupName: !Ref LogGroup
+      FilterPattern: '?Error ?error'
+      MetricTransformations: 
+        - MetricValue: 1
+          MetricNamespace: "ErrorLogs"
+          MetricName: "HubLogin-ErrorMetric"
+  
+  # Create alarm
+  ErrorLogsMetricAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: AlarmEnabled
+    DependsOn: ErrorLogsMetricFilter
+    Properties:
+      AlarmName: !Sub ${Project}-${Environment}-hub-ecs-log-alarm
+      AlarmDescription: "CloudWatch alarm for when ECS LogGroup has ERROR line."
+      TreatMissingData: notBreaching
+      AlarmActions: 
+        - !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}"
+      OKActions:
+        - !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}"
+      DatapointsToAlarm: 1
+      MetricName: "HubLogin-ErrorMetric"
+      Namespace: "ErrorLogs"
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      EvaluationPeriods: 60
+      Period: 60
+      Statistic: Sum
+      Threshold: 1
+
 Outputs:
   SamlAssertionLogBucket:
     Description: The ARN of the SAML Assertion Bucket
     Value:
       Ref: SamlAssertionLogBucket
+
+  ServiceName:
+    Description: Saml check service name
+    Value: !GetAtt Service.Name
+  
+  ClusterName:
+    Description: ECS Cluster Name
+    Value: !Ref Cluster

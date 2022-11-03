@@ -19,7 +19,8 @@
     "SpidSamlCheckConfigVersion": "v1",
     "WellKnownConfigVersion": "v1",
     "CacheNumberReplicas": "1",
-    "CacheNodeType": "cache.t3.small"
+    "CacheNodeType": "cache.t3.small",
+    "CustomMetadataUrl": "https://spid-hub-public-bucket.s3.eu-south-1.amazonaws.com/metadata-signed.xml"
   },
   "StackPolicy": {}
 }

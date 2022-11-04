@@ -447,3 +447,19 @@ Resources:
           - Orchestrator
           - Outputs.ListenerHttps
       TemplateURL: ./stacks/well-known.yaml
+
+  Dashboard:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+    - HubLogin
+    - Cache
+    - Orchestrator
+    Properties:
+      Parameters:
+        Project: !Ref Project
+        Environment: !Ref Environment
+        RedisClusterName: !GetAtt Cache.Outputs.RedisClusterName
+        ApplicationLoadBalancer: !GetAtt Orchestrator.Outputs.ExternalALBFullName
+        HubLoginService: !GetAtt HubLogin.Outputs.ServiceName
+        HubLoginCluster: !GetAtt HubLogin.Outputs.ClusterName
+      TemplateURL: ./stacks/dashboard.yaml

@@ -19,6 +19,13 @@ Parameters:
 
 Resources:
 
+  LambdaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName:
+        Fn::Sub: "/aws/lambda/${CustomMetadataLambda}"
+      RetentionInDays: 14
+
   CustomMetadataInvokePermission:
     Type: AWS::Lambda::Permission
     Properties:

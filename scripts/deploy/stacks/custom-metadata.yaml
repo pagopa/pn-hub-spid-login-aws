@@ -1,0 +1,132 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: SPID Hub - Custom Metadata Listener Rule
+
+Parameters:
+
+  CustomMetadataS3Path:
+    Description: Metadata file s3 Path
+    Type: String
+
+  Storage:
+    Description: s3 bucket
+    Type: String
+
+  ListenerArn:
+    Description: The ARN of the ALB Listener
+    Type: String
+
+
+Resources:
+
+  LambdaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName:
+        Fn::Sub: "/aws/lambda/${CustomMetadataLambda}"
+      RetentionInDays: 14
+
+  CustomMetadataInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt 
+        - CustomMetadataLambda
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: elasticloadbalancing.amazonaws.com
+
+  CustomMetadataLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile: |
+            const AWS = require('aws-sdk');
+            exports.lambda_handler = async (event) => {
+              let S3 = new AWS.S3();
+
+              const params = {
+                Bucket: process.env.BUCKET,
+                Key: process.env.METADATA_PATH
+              }
+
+              const data = await S3.getObject(params).promise()
+              const metadataBody = data.Body.toString('utf-8');
+
+              const response = {
+                "statusCode": 200,
+                "statusDescription": "200 OK",
+                "isBase64Encoded": false,
+                "headers": {
+                  "Content-Type": "text/xml; charset=utf-8"
+                }
+              }
+
+              response.body = metadataBody;
+              return response
+            };
+      Handler: index.lambda_handler
+      Environment:
+        Variables:
+          METADATA_PATH: !Ref CustomMetadataS3Path 
+          BUCKET: !Ref Storage 
+      Runtime: nodejs16.x
+      Role: !GetAtt CustomMetadataExecutionRole.Arn
+
+  CustomMetadataExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [lambda.amazonaws.com]
+            Action: ['sts:AssumeRole']
+      Path: /     
+      Policies:
+        - PolicyName: CustomMetadataPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                Resource:
+                  - !Sub 'arn:aws:logs:*:${AWS::AccountId}:log-group:/aws/lambda/*'
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource:
+                  - !Sub 'arn:aws:logs:*:${AWS::AccountId}:log-group:/aws/lambda/*:*'
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                Resource:
+                  - !Sub 'arn:aws:s3:::${Storage}/*'
+
+  LambdaTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckEnabled: false
+      TargetType: lambda
+      Targets: 
+        - Id: !GetAtt CustomMetadataLambda.Arn
+
+  ListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+      - Type: forward
+        ForwardConfig:
+          TargetGroups: 
+            - TargetGroupArn: !Ref LambdaTargetGroup
+              Weight: 10
+      Conditions:
+      - Field: path-pattern
+        PathPatternConfig:
+          Values:
+          - '/metadata'
+      ListenerArn:
+        Ref: ListenerArn
+      Priority: 5

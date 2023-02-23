@@ -13,7 +13,7 @@
     "HubLoginVersion": "4.0.2-release",
     "HubLoginConfigVersion": "v1",
     "HubLoginSecrets": "spidhub-cert-hub-login",
-    "SpidSamlCheckVersion": "4.2.0-release",
+    "SpidSamlCheckVersion": "4.5.0-release",
     "SpidSamlCheckConfigVersion": "v1",
     "WellKnownConfigVersion": "v1",
     "CacheNumberReplicas": "1",

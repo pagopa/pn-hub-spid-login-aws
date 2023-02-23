@@ -12,14 +12,15 @@
     "AlternativeDomainName": "spid.notifichedigitali.it",
     "AlreadyCreatedCertificateArn": "arn:aws:acm:eu-south-1:907690015624:certificate/50c2f9a3-d3d7-41fe-92bb-942d5627dc19",
     "HostedZoneId": "Z0795706253SJ98Y11DIL",
-    "HubLoginVersion": "4.2.0-release",
+    "HubLoginVersion": "4.5.0-release",
     "HubLoginConfigVersion": "v1",
     "HubLoginSecrets": "spidhub-hotfix-hub-login",
     "SpidSamlCheckVersion": "v.1.8.3-snapshot",
     "SpidSamlCheckConfigVersion": "v1",
     "WellKnownConfigVersion": "v1",
     "CacheNumberReplicas": "1",
-    "CacheNodeType": "cache.t3.small"
+    "CacheNodeType": "cache.t3.small",
+    "CustomMetadataS3Path": "metadata/metadata-signed.xml"
   },
   "StackPolicy": {}
 }

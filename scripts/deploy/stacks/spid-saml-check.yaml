@@ -464,3 +464,182 @@ Resources:
       Statistic: Sum
       Threshold: !Ref MemoryUtilizationThreshold
       TreatMissingData: missing
+
+  # CloudWatch metric to filer ERROR -  lines, in Log group
+  ErrorLogsMetricFilter: 
+    Condition: AlarmEnabled
+    Type: AWS::Logs::MetricFilter
+    Properties: 
+      LogGroupName: !Ref LogGroup
+      FilterPattern: '?Error ?error'
+      MetricTransformations: 
+        - MetricValue: 1
+          MetricNamespace: "ErrorLogs"
+          MetricName: "SamlCheck-ErrorMetric"
+  
+  # Create alarm
+  ErrorLogsMetricAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: AlarmEnabled
+    DependsOn: ErrorLogsMetricFilter
+    Properties:
+      AlarmName: !Sub ${Project}-${Environment}-saml-check-alarm
+      AlarmDescription: "CloudWatch alarm for when ECS LogGroup has ERROR line."
+      TreatMissingData: notBreaching
+      AlarmActions: 
+        - !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}"
+      OKActions:
+        - !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}"
+      DatapointsToAlarm: 1
+      MetricName: "SamlCheck-ErrorMetric"
+      Namespace: "ErrorLogs"
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      EvaluationPeriods: 60
+      Period: 60
+      Statistic: Sum
+      Threshold: 1
+
+  # DashBoard
+  SamlCheckServiceDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: !Sub ${Project}-saml-check-dashboard
+      DashboardBody: !Sub '{
+            "widgets": [
+              {
+                    "type": "alarm",
+                    "x": 0,
+                    "y": 9,
+                    "width": 24,
+                    "height": 2,
+                    "properties": {
+                        "alarms": [
+                          "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:${Project}-${Environment}-spid-ecs-cpu-utilization",
+                          "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:${Project}-${Environment}-spid-ecs-memory-utilization",
+                          "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:${Project}-${Environment}-saml-check-alarm"
+                        ],
+                        "title": "Saml check Alarms"
+                    }
+                },
+
+                {               
+                    "height": 1,
+                    "width": 24,
+                    "y": 29,
+                    "x": 0,
+                    "type": "text",
+                    "properties": {
+                        "markdown": "# Saml check alarm History" 
+                    }
+                },
+
+                {
+                    "type": "metric",
+                    "x": 0,
+                    "y": 31,
+                    "width": 8,
+                    "height": 6,
+                    "properties": {
+                        "stacked": false,
+                        "region": "${AWS::Region}",
+                        "title": "Saml check ecs cpu utilization alarm history",
+                        "annotations": {
+                            "alarms": [
+                              "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:${Project}-${Environment}-spid-ecs-cpu-utilization"
+                            ]
+                        },
+                        "liveData": false,
+                        "view": "timeSeries"
+                    }
+                },
+
+                {
+                    "type": "metric",
+                    "x": 8,
+                    "y": 31,
+                    "width": 8,
+                    "height": 6,
+                    "properties": {
+                        "stacked": false,
+                        "region": "${AWS::Region}",
+                        "title": "Saml check ecs memory utilization alarm history",
+                        "annotations": {
+                            "alarms": [
+                          "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:${Project}-${Environment}-spid-ecs-memory-utilization"
+                            ]
+                        },
+                        "liveData": false,
+                        "view": "timeSeries"
+                    }
+                },
+
+                {
+                    "type": "metric",
+                    "x": 16,
+                    "y": 31,
+                    "width": 8,
+                    "height": 6,
+                    "properties": {
+                        "stacked": false,
+                        "region": "${AWS::Region}",
+                        "title": "Saml check log alarm",
+                        "annotations": {
+                            "alarms": [
+                              "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:${Project}-${Environment}-saml-check-alarm"
+                            ]
+                        },
+                        "liveData": false,
+                        "view": "timeSeries"
+                    }
+                },
+
+
+                {
+                    "height": 1,
+                    "width": 24,
+                    "y": 34,
+                    "x": 0,
+                    "type": "text",
+                    "properties": {
+                        "markdown": "# Saml check ECS metrics" 
+                    }
+                },
+
+                {
+                    "type": "metric",
+                    "x": 0,
+                    "y": 35,
+                    "width": 12,
+                    "height": 6,
+                    "properties": {
+                        "metrics": [
+                          [ "AWS/ECS", "CPUUtilization", "ServiceName", "${Service.Name}", "ClusterName", "${Cluster}"]
+                        ],
+                        "title": "Saml Check ECS Memory Utilization",
+                        "view": "timeSeries",
+                        "stacked": false,
+                        "region": "${AWS::Region}",
+                        "stat": "Average",
+                        "period": 300
+                    }
+                },
+                {
+                    "type": "metric",
+                    "x": 12,
+                    "y": 34,
+                    "width": 12,
+                    "height": 6,
+                    "properties": {
+                        "metrics": [
+                          [ "AWS/ECS", "MemoryUtilization", "ServiceName", "${Service.Name}", "ClusterName", "${Cluster}"]
+                        ],
+                        "title": "Saml Check ECS Memory Utilization",
+                        "view": "timeSeries",
+                        "stacked": false,
+                        "region": "${AWS::Region}",
+                        "stat": "Average",
+                        "period": 300
+                    }
+                }
+            ]
+        }'

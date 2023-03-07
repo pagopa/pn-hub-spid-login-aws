@@ -279,6 +279,11 @@ Parameters:
     Type: Number
     Default: 60
 
+  HelpdeskAccountId:
+    Type: String
+    Default: ''
+    Description: 'Helpdesk Account ID'
+    
 Resources:
 
   # Network:
@@ -400,6 +405,7 @@ Resources:
         AlarmSNSTopicName: !Ref AlarmSNSTopicName
         CPUUtilizationThreshold: !Ref CPUUtilizationThreshold
         MemoryUtilizationThreshold: !Ref MemoryUsedThreshold
+        HelpdeskAccountId: !Ref HelpdeskAccountId
       TemplateURL: ./stacks/hub-login.yaml
 
   SpidSamlCheck:

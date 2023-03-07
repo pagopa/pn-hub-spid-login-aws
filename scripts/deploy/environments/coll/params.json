@@ -17,7 +17,8 @@
     "SpidSamlCheckConfigVersion": "v1",
     "WellKnownConfigVersion": "v1",
     "CacheNumberReplicas": "1",
-    "CacheNodeType": "cache.t3.small"
+    "CacheNodeType": "cache.t3.small",
+    "HelpdeskAccountId": "648535372866"
   },
   "StackPolicy": {}
 }

@@ -120,6 +120,10 @@ Parameters:
     Description: Il numero di giorni dopo la creazione quando gli oggetti vengono eliminati da Amazon S3 e Amazon S3 Glacier. Questo vale per l'ambiente PROD
     Type: Number
 
+  HelpdeskAccountId:
+    Type: String
+    Default: ''
+    Description: Helpdesk account ID
 
 ## Note: When adding a new Environment that requires Object Lock Enabled please remember to add the same in the mapping bellow as well as condition.
 Mappings:
@@ -147,6 +151,11 @@ Conditions:
   IsCert: !Equals [!Ref Environment, "cert"]
   IsHotfix: !Equals [!Ref Environment, "hotfix"]
   
+  HasHelpdeskAccountId: !Not
+    - !Equals
+      - !Ref HelpdeskAccountId
+      - ""
+
   IsObjectLockEnabled: !Or [ Condition: IsProd, Condition: IsHotfix, Condition: IsColl, Condition: IsUat, Condition: IsCert, Condition: IsSvil ]
   
   AlarmEnabled: !Not
@@ -514,6 +523,20 @@ Resources:
           Action:
           - kms:*
           Resource: "*"
+        - Fn::If:
+          - HasHelpdeskAccountId
+          - Sid: Allow helpdesk account kms usage
+            Effect: Allow
+            Action:
+            - kms:Encrypt
+            - kms:Decrypt
+            - kms:ReEncrypt*
+            - kms:GenerateDataKey*
+            - kms:DescribeKey
+            Principal:
+              AWS: !Sub "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:role/pn-logextractor-be-${Environment}-ExecutionRole"
+            Resource: "*"
+          - !Ref AWS::NoValue
 
   SamlAssertionLogBucket:
     Type: AWS::S3::Bucket
@@ -635,6 +658,32 @@ Resources:
       Period: 60
       Statistic: Sum
       Threshold: 1
+
+  # Bucket Policy to allow readonly bucket access from Helpdesk account ECS Role
+  SamlAssertionHelpdeskResourcePolicy:
+    Type: AWS::S3::BucketPolicy
+    Condition: HasHelpdeskAccountId
+    Properties: 
+      Bucket: !Ref SamlAssertionLogBucket
+      PolicyDocument: !Sub |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "AWSHelpdeskRead",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:role/pn-logextractor-be-${Environment}-ExecutionRole"
+              },
+              "Action": [
+                "s3:Get*"
+              ],
+              "Resource": [
+                "arn:${AWS::Partition}:s3:::${SamlAssertionLogBucket}/*"
+              ]
+            }
+          ]
+        }
 
 Outputs:
   SamlAssertionLogBucket:

@@ -20,7 +20,8 @@
     "WellKnownConfigVersion": "v1",
     "CacheNumberReplicas": "1",
     "CacheNodeType": "cache.t3.small",
-    "CustomMetadataS3Path": "metadata/metadata-signed.xml"
+    "CustomMetadataS3Path": "metadata/metadata-signed.xml",
+    "HelpdeskAccountId": "063295570123"
   },
   "StackPolicy": {}
 }

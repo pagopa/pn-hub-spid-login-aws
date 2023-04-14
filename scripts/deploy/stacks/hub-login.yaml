@@ -242,6 +242,8 @@ Resources:
 
   Service:
     Type: AWS::ECS::Service
+    DependsOn:
+      - RedisOutgoing
     Properties:
       Cluster:
         Ref: Cluster
@@ -361,13 +363,7 @@ Resources:
   RedisOutgoing:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
-      Description:
-        Fn::Sub:
-        - "Connection from ${ServiceName} service"
-        - ServiceName:
-            Fn::GetAtt:
-            - Service
-            - Name
+      Description: !Sub "Connection from ${Project}-${Environment}-${Name} service"
       FromPort:
         Ref: RedisPort
       ToPort:

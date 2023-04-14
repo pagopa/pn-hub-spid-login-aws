@@ -82,12 +82,20 @@ Parameters:
     Description: The limit on requests per 5-minute period for a single originating IP address.
     Default: 300
 
+  VpcMode:
+    Type: String
+    Default: 'multi'
+    AllowedValues:
+      - 'multi'
+      - 'mono'
 
 Conditions:
   AlarmEnabled: !Not
     - !Equals
       - !Ref AlarmSNSTopicName
       - ""
+
+  IsMonoVpc: !Equals [ !Ref VpcMode, 'mono']
 
   HasAlreadyCreatedCertificateArn: !Not
     - !Equals
@@ -285,11 +293,11 @@ Resources:
       TargetType: ip
       Targets:
         - Id: !Select [ 0, !Ref InternalNlbIps ]
-          AvailabilityZone: all
+          AvailabilityZone: !If [ IsMonoVpc, !Select [ 0, !GetAZs '' ], all ]
         - Id: !Select [ 1, !Ref InternalNlbIps ]
-          AvailabilityZone: all
+          AvailabilityZone: !If [ IsMonoVpc, !Select [ 1, !GetAZs '' ], all ]
         - Id: !Select [ 2, !Ref InternalNlbIps ]
-          AvailabilityZone: all
+          AvailabilityZone: !If [ IsMonoVpc, !Select [ 2, !GetAZs '' ], all ]
   
   ExternalAlbListenerHttp:
     Type: AWS::ElasticLoadBalancingV2::Listener

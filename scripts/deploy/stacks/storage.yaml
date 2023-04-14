@@ -10,24 +10,14 @@ Parameters:
     MinLength: 3
     Type: String
 
-  Environment:
-    Description: The enviroment
-    MinLength: 3
-    Type: String
-    AllowedValues:
-    - dev
-    - uat
-    - prod
-    - svil
-    - coll
-    - cert
-    - hotfix
-
   StorageKMSKey:
     Default: alias/aws/s3
     Description: KMS key to encrypt storage
     Type: String
 
+  BucketName:
+    Type: String
+    Description: Bucket Name
 
 Resources:
 
@@ -36,8 +26,7 @@ Resources:
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
-      BucketName:
-        Fn::Sub: "${Project}-${Environment}-${AWS::Region}-spid"
+      BucketName: !Ref BucketName
       BucketEncryption:
         ServerSideEncryptionConfiguration:
         - ServerSideEncryptionByDefault:

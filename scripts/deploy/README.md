@@ -8,6 +8,11 @@
 
 Configure the AWS CLI via `aws configure`
 
+## Params
+
+Empty out the property HelpdeskAccountId in params.json file if the role pn-logextractor-be-${Environment}-ExecutionRole still doesn't exist. 
+Make sure to run the deploy again once the role is available in the Helpdesk account, with HelpdeskAccountId param filled.
+
 ## Deploy
 
 Rename `UserRegistryApiKey.tmp.example` to `UserRegistryApiKey.tmp` and edit the

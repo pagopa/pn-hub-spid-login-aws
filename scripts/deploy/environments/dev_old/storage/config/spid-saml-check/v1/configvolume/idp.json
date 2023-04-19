@@ -1,7 +1,7 @@
 {
 	"enabled": true,
-	"basepath": "/demo",
-	"entityID": "https://spid-saml-check.spid.dev.notifichedigitali.it/demo",
+	"basepath": "/",
+	"entityID": "https://spid-saml-check.spid.dev.pn.pagopa.it",
 	"signatureAlgorithm": "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256",
 	"credentials": [{
 		"signatureAlgorithm": "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256",
@@ -15,9 +15,13 @@
 	"requireSignedRequests": true,
 	"requireSignedResponses": false,
 
-	"checkStrict": false,
-	"checkCerts": true,
-	"checkExtra": false,
-	"maxRetry": 3,
-	"loginTimeout": 60000
+	"agidloginAuthentication": false,
+	"agidloginClientID": "",
+	"agidloginClientSecret": "",
+	"agidloginRedirectURI": "",
+	"agidloginPostLogoutRedirectURI": "",
+
+	"localloginUser": "validator",
+	"localloginPasswordHash": "f82af32160bc53112ca118abbf57fa6fed47eb90291a1d1d92f438ae2ed74ef6",
+	"autoLogin": false
 }

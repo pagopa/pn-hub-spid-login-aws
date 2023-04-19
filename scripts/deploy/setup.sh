@@ -26,9 +26,14 @@ AWS_REGION=$2
 ENVIRONMENT=$3
 UserRegistryApiKey=$4
 
+BucketName=$(cat "./environments/$ENVIRONMENT/params.json" \
+    | jq -r ".Parameters.Storage")
+    
+echo "Bucket Name:" ${BucketName}
+
 PROJECT=spidhub
 STACK_NAME=spidhub
-PACKAGE_BUCKET=$PROJECT-$ENVIRONMENT-$AWS_REGION-spid
+PACKAGE_BUCKET=$BucketName
 PACKAGE_PREFIX=package
 
 secretPresent=$( aws \
@@ -94,7 +99,7 @@ aws \
   cloudformation deploy \
   --template-file "./stacks/storage.yaml" \
   --stack-name "$PROJECT-$ENVIRONMENT-storage" \
-  --parameter-overrides Project=$PROJECT Environment=$ENVIRONMENT \
+  --parameter-overrides Project=$PROJECT Environment=$ENVIRONMENT BucketName=$BucketName \
   --tags Project=$PROJECT Environment=$ENVIRONMENT \
   --no-fail-on-empty-changeset
 

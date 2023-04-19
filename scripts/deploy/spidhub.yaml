@@ -284,6 +284,13 @@ Parameters:
     Default: ''
     Description: 'Helpdesk Account ID'
     
+  VpcMode:
+    Type: String
+    Default: 'multi'
+    AllowedValues:
+      - 'multi'
+      - 'mono'
+
 Resources:
 
   # Network:
@@ -334,6 +341,7 @@ Resources:
         CPUUtilizationThreshold: !Ref CPUUtilizationThreshold
         MemoryUtilizationThreshold: !Ref MemoryUsedThreshold
         RequestPerIpLimit: !Ref RequestPerIpLimit
+        VpcMode: !Ref VpcMode
       TemplateURL: ./stacks/orchestrator.yaml
 
   Cache:
@@ -411,8 +419,6 @@ Resources:
   SpidSamlCheck:
     Type: AWS::CloudFormation::Stack
     Condition: IsNotProd
-    DependsOn:
-    - HubLogin
     Properties:
       Parameters:
         Project: !Ref Project

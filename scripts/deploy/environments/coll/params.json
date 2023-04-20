@@ -18,7 +18,8 @@
     "WellKnownConfigVersion": "v1",
     "CacheNumberReplicas": "1",
     "CacheNodeType": "cache.t3.small",
-    "HelpdeskAccountId": "648535372866"
+    "HelpdeskAccountId": "648535372866",
+    "LogextractorExecutionRole": "pn-logextractor-be-svil-ExecutionRole"
   },
   "StackPolicy": {}
 }

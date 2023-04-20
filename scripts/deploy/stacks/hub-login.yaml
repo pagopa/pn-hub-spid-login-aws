@@ -125,6 +125,10 @@ Parameters:
     Default: ''
     Description: Helpdesk account ID
 
+  LogextractorExecutionRole:
+    Type: String
+    Default: ''
+
 ## Note: When adding a new Environment that requires Object Lock Enabled please remember to add the same in the mapping bellow as well as condition.
 Mappings:
   RetentionModeMap:
@@ -530,7 +534,7 @@ Resources:
             - kms:GenerateDataKey*
             - kms:DescribeKey
             Principal:
-              AWS: !Sub "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:role/pn-logextractor-be-${Environment}-ExecutionRole"
+              AWS: !Sub "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:role/${LogextractorExecutionRole}"
             Resource: "*"
           - !Ref AWS::NoValue
 
@@ -669,7 +673,7 @@ Resources:
               "Sid": "AWSHelpdeskRead",
               "Effect": "Allow",
               "Principal": {
-                "AWS": "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:role/pn-logextractor-be-${Environment}-ExecutionRole"
+                "AWS": "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:role/${LogextractorExecutionRole}"
               },
               "Action": [
                 "s3:Get*"

@@ -291,6 +291,10 @@ Parameters:
       - 'multi'
       - 'mono'
 
+  LogextractorExecutionRole:
+    Type: String
+    Default: ''
+
 Resources:
 
   # Network:
@@ -414,6 +418,7 @@ Resources:
         CPUUtilizationThreshold: !Ref CPUUtilizationThreshold
         MemoryUtilizationThreshold: !Ref MemoryUsedThreshold
         HelpdeskAccountId: !Ref HelpdeskAccountId
+        LogextractorExecutionRole: !Ref LogextractorExecutionRole
       TemplateURL: ./stacks/hub-login.yaml
 
   SpidSamlCheck:

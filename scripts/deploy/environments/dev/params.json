@@ -19,6 +19,7 @@
     "CacheNumberReplicas": "1",
     "CacheNodeType": "cache.t3.small",
     "HelpdeskAccountId": "830192246553",
+    "LogextractorExecutionRole": "pn-logextractor-be-ExecutionRole",
     "VpcMode": "mono"
   },
   "StackPolicy": {}

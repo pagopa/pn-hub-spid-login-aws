@@ -112,23 +112,39 @@ aws \
   s3://$PACKAGE_BUCKET/ \
   --delete
 
+alarmName=""
 
+SkipAlarmTopic=$(cat "./environments/$ENVIRONMENT/params.json" | jq -r '.Parameters.SkipAlarmTopic' )
 
-aws \
-  --profile "$AWS_PROFILE" \
-  --region "$AWS_REGION" \
-  cloudformation deploy \
-  --stack-name "$PROJECT-$ENVIRONMENT-alarm" \
-  --tags Project=$PROJECT Environment=$ENVIRONMENT \
-  --template-file "./stacks/alarm-topic/$ENVIRONMENT.yaml" \
+if ( [ $SkipAlarmTopic="true" ] ) then
 
-alarmName=$( aws \
-  --profile "$AWS_PROFILE" \
-  --region "$AWS_REGION" \
-  cloudformation describe-stacks \
-  --stack-name "$PROJECT-$ENVIRONMENT-alarm" \
-  | jq -r '.Stacks[0].Outputs | .[] | select ( .OutputKey=="AlarmSNSTopicName") | .OutputValue' \
-)
+  alarmName=$( aws \
+    --profile "$AWS_PROFILE" \
+    --region "$AWS_REGION" \
+    cloudformation describe-stacks \
+    --stack-name "once-$ENVIRONMENT" \
+    | jq -r '.Stacks[0].Outputs | .[] | select ( .OutputKey=="AlarmSNSTopicName") | .OutputValue' \
+  )
+
+else
+
+  aws \
+    --profile "$AWS_PROFILE" \
+    --region "$AWS_REGION" \
+    cloudformation deploy \
+    --stack-name "$PROJECT-$ENVIRONMENT-alarm" \
+    --tags Project=$PROJECT Environment=$ENVIRONMENT \
+    --template-file "./stacks/alarm-topic/$ENVIRONMENT.yaml" \
+
+  alarmName=$( aws \
+    --profile "$AWS_PROFILE" \
+    --region "$AWS_REGION" \
+    cloudformation describe-stacks \
+    --stack-name "$PROJECT-$ENVIRONMENT-alarm" \
+    | jq -r '.Stacks[0].Outputs | .[] | select ( .OutputKey=="AlarmSNSTopicName") | .OutputValue' \
+  )
+
+fi
 
 echo ""
 echo ""

@@ -15,6 +15,7 @@ Parameters:
     AllowedValues:
     - dev
     - uat
+    - test
     - prod
     - svil
     - coll

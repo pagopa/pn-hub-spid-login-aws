@@ -1,0 +1,27 @@
+{
+  "Parameters": {
+    "Project": "spidhub",
+    "Environment": "test",
+    "Storage": "spidhub-771887334808-test-eu-south-1-spid",
+    "FrontEndVpcId":"vpc-0448f2fbbc282aa9e",
+    "BackEndVpcId":"vpc-0448f2fbbc282aa9e",
+    "FrontEndSubnets": "subnet-0b8b73dcf5a8f5d82,subnet-0540ca5242ebfb981,subnet-0175fc8dca0c73563",
+    "BackEndSubnets": "subnet-0dbf267c4ea3ba832,subnet-08ac032655ee9182c,subnet-01cd36eb3d0a0a938",
+    "InternalNlbIps": "10.5.40.220,10.5.41.220,10.5.42.220",
+    "DomainName": "spid.test.notifichedigitali.it",
+    "HostedZoneId": "Z0387379ZKMAKOANQ2QH",
+    "HubLoginVersion": "4.5.0-release",
+    "HubLoginConfigVersion": "v1",
+    "HubLoginSecrets": "spidhub-test-hub-login",
+    "SpidSamlCheckVersion": "v.1.8.3-snapshot",
+    "SpidSamlCheckConfigVersion": "v1",
+    "WellKnownConfigVersion": "v1",
+    "CacheNumberReplicas": "1",
+    "CacheNodeType": "cache.t3.small",
+    "HelpdeskAccountId": "151559006927",
+    "LogextractorExecutionRole": "pn-logextractor-be-ExecutionRole",
+    "VpcMode": "mono",
+    "SkipAlarmTopic": "true"
+  },
+  "StackPolicy": {}
+}

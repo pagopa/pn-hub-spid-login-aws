@@ -677,14 +677,17 @@ Resources:
               "Sid": "AWSHelpdeskRead",
               "Effect": "Allow",
               "Principal": {
-                "AWS": "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:role/${LogextractorExecutionRole}"
+                "AWS": "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:root"
               },
               "Action": [
                 "s3:Get*"
               ],
               "Resource": [
                 "arn:${AWS::Partition}:s3:::${SamlAssertionLogBucket}/*"
-              ]
+              ],
+              "Condition": {
+                "ArnEquals": {"aws:PrincipalArn": "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:role/${LogextractorExecutionRole}"}
+              }
             }
           ]
         }

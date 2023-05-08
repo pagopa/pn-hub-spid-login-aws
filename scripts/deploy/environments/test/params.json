@@ -19,7 +19,7 @@
     "CacheNumberReplicas": "1",
     "CacheNodeType": "cache.t3.small",
     "HelpdeskAccountId": "151559006927",
-    "LogextractorExecutionRole": "pn-logextractor-be-ExecutionRole",
+    "LogextractorExecutionRole": "pn-logextractor-be-TaskRole",
     "VpcMode": "mono",
     "SkipAlarmTopic": "true"
   },

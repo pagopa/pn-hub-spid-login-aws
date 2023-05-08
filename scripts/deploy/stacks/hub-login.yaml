@@ -141,6 +141,8 @@ Mappings:
       "Mode": "GOVERNANCE"
     uat:
       "Mode": "GOVERNANCE"
+    test:
+      "Mode": "GOVERNANCE"
     coll:
       "Mode": "GOVERNANCE"
     hotfix:
@@ -153,6 +155,7 @@ Conditions:
   IsProd: !Equals [!Ref Environment, "prod"]
   IsColl: !Equals [!Ref Environment, "coll"]
   IsUat: !Equals [!Ref Environment, "uat"]
+  IsTest: !Equals [!Ref Environment, "test"]
   IsCert: !Equals [!Ref Environment, "cert"]
   IsHotfix: !Equals [!Ref Environment, "hotfix"]
   
@@ -161,7 +164,7 @@ Conditions:
       - !Ref HelpdeskAccountId
       - ""
 
-  IsObjectLockEnabled: !Or [ Condition: IsProd, Condition: IsHotfix, Condition: IsColl, Condition: IsUat, Condition: IsCert, Condition: IsSvil ]
+  IsObjectLockEnabled: !Or [ Condition: IsProd, Condition: IsHotfix, Condition: IsColl, Condition: IsUat, Condition: IsTest, Condition: IsCert, Condition: IsSvil ]
   
   AlarmEnabled: !Not
     - !Equals
@@ -535,8 +538,11 @@ Resources:
             - kms:GenerateDataKey*
             - kms:DescribeKey
             Principal:
-              AWS: !Sub "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:role/${LogextractorExecutionRole}"
+              AWS: !Sub "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:root"
             Resource: "*"
+            Condition: 
+              ArnEquals: 
+                aws:PrincipalArn: !Sub "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:role/${LogextractorExecutionRole}"
           - !Ref AWS::NoValue
 
   SamlAssertionLogBucket:
@@ -674,14 +680,17 @@ Resources:
               "Sid": "AWSHelpdeskRead",
               "Effect": "Allow",
               "Principal": {
-                "AWS": "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:role/${LogextractorExecutionRole}"
+                "AWS": "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:root"
               },
               "Action": [
                 "s3:Get*"
               ],
               "Resource": [
                 "arn:${AWS::Partition}:s3:::${SamlAssertionLogBucket}/*"
-              ]
+              ],
+              "Condition": {
+                "ArnEquals": {"aws:PrincipalArn": "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:role/${LogextractorExecutionRole}"}
+              }
             }
           ]
         }

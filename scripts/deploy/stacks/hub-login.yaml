@@ -538,8 +538,11 @@ Resources:
             - kms:GenerateDataKey*
             - kms:DescribeKey
             Principal:
-              AWS: !Sub "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:role/${LogextractorExecutionRole}"
+              AWS: !Sub "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:root"
             Resource: "*"
+            Condition: 
+              ArnEquals: 
+                aws:PrincipalArn: !Sub "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:role/${LogextractorExecutionRole}"
           - !Ref AWS::NoValue
 
   SamlAssertionLogBucket:

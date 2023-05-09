@@ -296,6 +296,10 @@ Parameters:
     Type: String
     Default: ''
 
+  LogRetention:
+    Type: Number
+    Default: 14
+    
 Resources:
 
   # Network:
@@ -420,6 +424,7 @@ Resources:
         MemoryUtilizationThreshold: !Ref MemoryUsedThreshold
         HelpdeskAccountId: !Ref HelpdeskAccountId
         LogextractorExecutionRole: !Ref LogextractorExecutionRole
+        LogRetention: !Ref LogRetention
       TemplateURL: ./stacks/hub-login.yaml
 
   SpidSamlCheck:

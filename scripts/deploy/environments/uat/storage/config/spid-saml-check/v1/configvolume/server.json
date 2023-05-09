@@ -1,5 +1,5 @@
 {
-  "host": "https://spid-saml-check.ecs.uat.pn.pagopa.it",
+  "host": "https://spid-saml-check.spid.uat.notifichedigitali.it",
   "port": 8080,
   "useProxy": true,
   "useHttps": false

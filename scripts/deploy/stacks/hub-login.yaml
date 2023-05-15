@@ -648,27 +648,29 @@ Resources:
           MetricNamespace: "ErrorLogs"
           MetricName: "HubLogin-ErrorMetric"
   
+  # NOTE: The error log alarm has been disabled due to a bug on hub-spid-login-ms that logs an error on each successfull login (HSL-17). 
+  # Login service can still be monitored using spidhub-<codice-ambiente>-ExternalALBAlarm Alarm.
   # Create alarm
-  ErrorLogsMetricAlarm:
-    Type: AWS::CloudWatch::Alarm
-    Condition: AlarmEnabled
-    DependsOn: ErrorLogsMetricFilter
-    Properties:
-      AlarmName: !Sub ${Project}-${Environment}-hub-ecs-log-alarm
-      AlarmDescription: "CloudWatch alarm for when ECS LogGroup has ERROR line."
-      TreatMissingData: notBreaching
-      AlarmActions: 
-        - !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}"
-      OKActions:
-        - !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}"
-      DatapointsToAlarm: 1
-      MetricName: "HubLogin-ErrorMetric"
-      Namespace: "ErrorLogs"
-      ComparisonOperator: GreaterThanOrEqualToThreshold
-      EvaluationPeriods: 60
-      Period: 60
-      Statistic: Sum
-      Threshold: 1
+  # ErrorLogsMetricAlarm:
+  #   Type: AWS::CloudWatch::Alarm
+  #   Condition: AlarmEnabled
+  #   DependsOn: ErrorLogsMetricFilter
+  #   Properties:
+  #     AlarmName: !Sub ${Project}-${Environment}-hub-ecs-log-alarm
+  #     AlarmDescription: "CloudWatch alarm for when ECS LogGroup has ERROR line."
+  #     TreatMissingData: notBreaching
+  #     AlarmActions: 
+  #       - !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}"
+  #     OKActions:
+  #       - !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}"
+  #     DatapointsToAlarm: 1
+  #     MetricName: "HubLogin-ErrorMetric"
+  #     Namespace: "ErrorLogs"
+  #     ComparisonOperator: GreaterThanOrEqualToThreshold
+  #     EvaluationPeriods: 60
+  #     Period: 60
+  #     Statistic: Sum
+  #     Threshold: 1
 
   # Bucket Policy to allow readonly bucket access from Helpdesk account ECS Role
   SamlAssertionHelpdeskResourcePolicy:

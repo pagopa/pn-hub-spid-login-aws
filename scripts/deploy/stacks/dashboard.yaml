@@ -72,8 +72,7 @@ Resources:
                     "properties": {
                         "alarms": [
                           "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:${Project}-${Environment}-hub-ecs-cpu-utilization",
-                          "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:${Project}-${Environment}-hub-ecs-memory-utilization",
-                          "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:${Project}-${Environment}-hub-ecs-log-alarm"
+                          "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:${Project}-${Environment}-hub-ecs-memory-utilization"
                         ],
                         "title": "Hub login Alarms"
                     }
@@ -199,7 +198,7 @@ Resources:
                     "type": "metric",
                     "x": 0,
                     "y": 22,
-                    "width": 8,
+                    "width": 12,
                     "height": 6,
                     "properties": {
                         "stacked": false,
@@ -219,7 +218,7 @@ Resources:
                     "type": "metric",
                     "x": 8,
                     "y": 22,
-                    "width": 8,
+                    "width": 12,
                     "height": 6,
                     "properties": {
                         "stacked": false,
@@ -228,26 +227,6 @@ Resources:
                         "annotations": {
                             "alarms": [
                               "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:${Project}-${Environment}-hub-ecs-memory-utilization"
-                            ]
-                        },
-                        "liveData": false,
-                        "view": "timeSeries"
-                    }
-                },
-
-                {
-                    "type": "metric",
-                    "x": 16,
-                    "y": 22,
-                    "width": 8,
-                    "height": 6,
-                    "properties": {
-                        "stacked": false,
-                        "region": "${AWS::Region}",
-                        "title": "Hub login log alarm history",
-                        "annotations": {
-                            "alarms": [
-                              "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:${Project}-${Environment}-hub-ecs-log-alarm"
                             ]
                         },
                         "liveData": false,

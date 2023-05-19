@@ -300,6 +300,11 @@ Parameters:
     Type: Number
     Default: 14
     
+  BucketLifecycleRetentionExpirationInDaysProd:
+    Default: 730
+    Description: Il numero di giorni dopo la creazione quando gli oggetti vengono eliminati da Amazon S3 e Amazon S3 Glacier. Questo vale per l'ambiente PROD
+    Type: Number
+
 Resources:
 
   # Network:
@@ -425,6 +430,7 @@ Resources:
         HelpdeskAccountId: !Ref HelpdeskAccountId
         LogextractorExecutionRole: !Ref LogextractorExecutionRole
         LogRetention: !Ref LogRetention
+        BucketLifecycleRetentionExpirationInDaysProd: !Ref BucketLifecycleRetentionExpirationInDaysProd
       TemplateURL: ./stacks/hub-login.yaml
 
   SpidSamlCheck:

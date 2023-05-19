@@ -10,7 +10,7 @@
     "InternalNlbIps": "10.5.63.200,10.5.127.200,10.5.191.200",
     "DomainName": "spid.svil.pn.pagopa.it",
     "HostedZoneId": "Z051129113N11IU530BLC",
-    "HubLoginVersion": "4.8.2-RELEASE",
+    "HubLoginVersion": "5.0.3-RELEASE@sha256:234d4a13ce635dbcd4e57947bbed7660c5970f05a8970dd63701e1da9e8db101",
     "HubLoginConfigVersion": "v1",
     "HubLoginSecrets": "spidhub-svil-hub-login",
     "SpidSamlCheckVersion": "v.1.8.3-snapshot",

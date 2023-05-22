@@ -22,7 +22,8 @@
     "SpidSamlCheckConfigVersion": "v1",
     "WellKnownConfigVersion": "v1",
     "CacheNumberReplicas": "3",
-    "CacheNodeType": "cache.t3.medium"
+    "CacheNodeType": "cache.t3.medium",
+    "CustomMetadataS3Path": "metadata/metadata-signed.xml"
   },
   "StackPolicy": {}
 }

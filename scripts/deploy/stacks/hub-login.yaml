@@ -321,7 +321,7 @@ Resources:
       - Key: deregistration_delay.timeout_seconds
         Value: '30'
       - Key: slow_start.duration_seconds
-        Value: '30'
+        Value: '0'
       - Key: load_balancing.algorithm.type
         Value: least_outstanding_requests
       TargetType: ip

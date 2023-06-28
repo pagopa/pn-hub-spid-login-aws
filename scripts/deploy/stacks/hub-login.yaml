@@ -183,7 +183,7 @@ Resources:
       ContainerDefinitions:
       - Name: main
 #        Image: !Sub "ghcr.io/pagopa/hub-spid-login-ms:${Version}"
-        Image: "911845998067.dkr.ecr.eu-south-1.amazonaws.com/hub-spid-login-ms:keep-alive-fix"
+        Image: "911845998067.dkr.ecr.eu-south-1.amazonaws.com/hub-spid-login-ms:2e8b34a95bd38a1712b03bd56d0663ac6c97286e"
         Cpu: 2048
         Memory: 4096
         #MemoryReservation: 512
@@ -345,8 +345,8 @@ Resources:
   ScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
     Properties:
-      MaxCapacity: 5
-      MinCapacity: 1
+      MaxCapacity: 21
+      MinCapacity: 10
       RoleARN:
         Fn::Sub: "arn:aws:iam::${AWS::AccountId}:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService"
       ServiceNamespace: ecs

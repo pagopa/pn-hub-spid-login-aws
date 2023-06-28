@@ -182,9 +182,10 @@ Resources:
     Properties:
       ContainerDefinitions:
       - Name: main
-        Image: !Sub "ghcr.io/pagopa/hub-spid-login-ms:${Version}"
-        Cpu: 1024
-        Memory: 2048
+#        Image: !Sub "ghcr.io/pagopa/hub-spid-login-ms:${Version}"
+        Image: "911845998067.dkr.ecr.eu-south-1.amazonaws.com/hub-spid-login-ms:keep-alive-fix"
+        Cpu: 2048
+        Memory: 4096
         #MemoryReservation: 512
         Environment:
         - Name: REDIS_URL
@@ -238,8 +239,8 @@ Resources:
         - Name: REDIS_PASSWORD
           ValueFrom:
             Fn::Sub: "${RedisSecret}:AuthToken:AWSCURRENT:"
-      Cpu: 1024
-      Memory: 2048
+      Cpu: 2048
+      Memory: 4096
       ExecutionRoleArn:
         Fn::GetAtt:
         - TaskExecutionRole
@@ -447,6 +448,25 @@ Resources:
       Description: Task Execution Role for Amazon ECS
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+
+  TaskExecutionEcr:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Get service configuration for ECR
+      Roles:
+      - Ref: TaskExecutionRole
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - ecr:GetAuthorizationToken
+              - ecr:BatchCheckLayerAvailability
+              - ecr:GetDownloadUrlForLayer
+              - ecr:BatchGetImage
+            Resource:
+              - '*'
+
 
   TaskExecutionS3Config:
     Type: AWS::IAM::ManagedPolicy

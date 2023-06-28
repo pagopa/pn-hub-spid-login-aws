@@ -677,7 +677,7 @@ Resources:
     Condition: AlarmEnabled
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmName: !Sub "${Project}-${Environment}-ExternalALBAlarm"
+      AlarmName: !Sub "${Project}-${Environment}-ExternalELBAlarm"
       AlarmDescription: "CloudWatch alarm when an application load balancer respond with a HTTP status 500."
       AlarmActions:
         - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
@@ -741,13 +741,13 @@ Resources:
           ReturnData: False          
         - Id: e1
           Expression: m1+m2+m3+m4
-          Label: !Sub "${Project}-${Environment}-ExternalALBAlarm-alarm-metric"
+          Label: !Sub "${Project}-${Environment}-ExternalELBAlarm-alarm-metric"
 
   ApplicationLoadBalancerOnCallAlarm:
     Condition: AlarmEnabled
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmName: !Sub "oncall-${Project}-${Environment}-ExternalALBAlarm"
+      AlarmName: !Sub "oncall-${Project}-${Environment}-ExternalELBAlarm"
       AlarmDescription: "CloudWatch alarm when an application load balancer respond with a HTTP status 500."
       AlarmActions:
         - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
@@ -835,7 +835,7 @@ Resources:
           ReturnData: False      
         - Id: e1
           Expression: IF((m5>=10 AND m1/m5>=0.9 OR m2/m5>=0.1) OR (m6>10 AND m3/m6>=0.9 OR m4/m6>=0.1), 1, 0)
-          Label: !Sub "${Project}-${Environment}-ExternalALBAlarm-oncall-metric"
+          Label: !Sub "${Project}-${Environment}-ExternalELBAlarm-oncall-metric"
 
   # NOTE: The error log alarm has been disabled due to a bug on hub-spid-login-ms that logs an error on each successfull login (HSL-17). 
   # Login service can still be monitored using spidhub-<codice-ambiente>-ExternalALBAlarm Alarm.

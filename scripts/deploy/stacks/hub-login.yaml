@@ -322,6 +322,8 @@ Resources:
         Value: '30'
       - Key: slow_start.duration_seconds
         Value: '30'
+      - Key: load_balancing.algorithm.type
+        Value: least_outstanding_requests
       TargetType: ip
       UnhealthyThresholdCount: 6
       VpcId:

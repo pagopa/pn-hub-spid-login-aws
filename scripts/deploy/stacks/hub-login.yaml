@@ -64,6 +64,9 @@ Parameters:
     Description: The ARN of the ALB Listener
     Type: String
 
+  ApplicationLoadBalancerFullName:
+    Type: String
+
   DomainName:
     AllowedPattern: ^(((?!-)[A-Za-z0-9-]{0,62}[A-Za-z0-9])\.)+((?!-)[A-Za-z0-9-]{1,62}[A-Za-z0-9])$
     Description: The domain name
@@ -182,9 +185,10 @@ Resources:
     Properties:
       ContainerDefinitions:
       - Name: main
-        Image: !Sub "ghcr.io/pagopa/hub-spid-login-ms:${Version}"
-        Cpu: 1024
-        Memory: 2048
+#        Image: !Sub "ghcr.io/pagopa/hub-spid-login-ms:${Version}"
+        Image: "911845998067.dkr.ecr.eu-south-1.amazonaws.com/hub-spid-login-ms:2e8b34a95bd38a1712b03bd56d0663ac6c97286e"
+        Cpu: 2048
+        Memory: 4096
         #MemoryReservation: 512
         Environment:
         - Name: REDIS_URL
@@ -238,8 +242,8 @@ Resources:
         - Name: REDIS_PASSWORD
           ValueFrom:
             Fn::Sub: "${RedisSecret}:AuthToken:AWSCURRENT:"
-      Cpu: 1024
-      Memory: 2048
+      Cpu: 2048
+      Memory: 4096
       ExecutionRoleArn:
         Fn::GetAtt:
         - TaskExecutionRole
@@ -261,7 +265,7 @@ Resources:
         Ref: Cluster
       EnableECSManagedTags: true
       EnableExecuteCommand: true
-      DesiredCount: 1
+      DesiredCount: 21
       LaunchType: FARGATE
       LoadBalancers:
       - ContainerName: main
@@ -320,7 +324,9 @@ Resources:
       - Key: deregistration_delay.timeout_seconds
         Value: '30'
       - Key: slow_start.duration_seconds
-        Value: '30'
+        Value: '0'
+      - Key: load_balancing.algorithm.type
+        Value: least_outstanding_requests
       TargetType: ip
       UnhealthyThresholdCount: 6
       VpcId:
@@ -344,8 +350,8 @@ Resources:
   ScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
     Properties:
-      MaxCapacity: 5
-      MinCapacity: 1
+      MaxCapacity: 21
+      MinCapacity: 21
       RoleARN:
         Fn::Sub: "arn:aws:iam::${AWS::AccountId}:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService"
       ServiceNamespace: ecs
@@ -447,6 +453,25 @@ Resources:
       Description: Task Execution Role for Amazon ECS
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+
+  TaskExecutionEcr:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Get service configuration for ECR
+      Roles:
+      - Ref: TaskExecutionRole
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - ecr:GetAuthorizationToken
+              - ecr:BatchCheckLayerAvailability
+              - ecr:GetDownloadUrlForLayer
+              - ecr:BatchGetImage
+            Resource:
+              - '*'
+
 
   TaskExecutionS3Config:
     Type: AWS::IAM::ManagedPolicy
@@ -648,6 +673,170 @@ Resources:
           MetricNamespace: "ErrorLogs"
           MetricName: "HubLogin-ErrorMetric"
   
+  ApplicationLoadBalancerAlarm:
+    Condition: AlarmEnabled
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${Project}-${Environment}-ExternalELBAlarm"
+      AlarmDescription: "CloudWatch alarm when an application load balancer respond with a HTTP status 500."
+      AlarmActions:
+        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
+      InsufficientDataActions:
+        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
+      OKActions:
+        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
+      DatapointsToAlarm: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      EvaluationPeriods: 5
+      Threshold: 1
+      TreatMissingData: notBreaching
+      Metrics:
+        - Id: m1
+          MetricStat:
+            Metric:
+              Dimensions:
+                - Name: LoadBalancer
+                  Value: !Ref ApplicationLoadBalancerFullName
+              MetricName: HTTPCode_ELB_4XX_Count
+              Namespace: AWS/ApplicationELB
+            Period: 60
+            Stat: Sum
+          ReturnData: False
+        - Id: m2
+          MetricStat:
+            Metric:
+              Dimensions:
+                - Name: LoadBalancer
+                  Value: !Ref ApplicationLoadBalancerFullName
+              MetricName: HTTPCode_ELB_5XX_Count
+              Namespace: AWS/ApplicationELB
+            Period: 60
+            Stat: Sum
+          ReturnData: False
+        - Id: m3
+          MetricStat:
+            Metric:
+              Dimensions:
+                - Name: LoadBalancer
+                  Value: !Ref ApplicationLoadBalancerFullName
+                - Name: TargetGroup
+                  Value: !GetAtt TargetGroup.TargetGroupFullName
+              MetricName: HTTPCode_Target_4XX_Count
+              Namespace: AWS/ApplicationELB
+            Period: 60
+            Stat: Sum
+          ReturnData: False
+        - Id: m4
+          MetricStat:
+            Metric:
+              Dimensions:
+                - Name: LoadBalancer
+                  Value: !Ref ApplicationLoadBalancerFullName
+                - Name: TargetGroup
+                  Value: !GetAtt TargetGroup.TargetGroupFullName
+              MetricName: HTTPCode_Target_5XX_Count
+              Namespace: AWS/ApplicationELB
+            Period: 60
+            Stat: Sum
+          ReturnData: False          
+        - Id: e1
+          Expression: m1+m2+m3+m4
+          Label: !Sub "${Project}-${Environment}-ExternalELBAlarm-alarm-metric"
+
+  ApplicationLoadBalancerOnCallAlarm:
+    Condition: AlarmEnabled
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "oncall-${Project}-${Environment}-ExternalELBAlarm"
+      AlarmDescription: "CloudWatch alarm when an application load balancer respond with a HTTP status 500."
+      AlarmActions:
+        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
+      InsufficientDataActions:
+        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
+      OKActions:
+        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
+      DatapointsToAlarm: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      EvaluationPeriods: 5
+      Threshold: 1
+      TreatMissingData: notBreaching
+      Metrics:
+        - Id: m1
+          MetricStat:
+            Metric:
+              Dimensions:
+                - Name: LoadBalancer
+                  Value: !Ref ApplicationLoadBalancerFullName
+              MetricName: HTTPCode_ELB_4XX_Count
+              Namespace: AWS/ApplicationELB
+            Period: 60
+            Stat: Sum
+          ReturnData: False
+        - Id: m2
+          MetricStat:
+            Metric:
+              Dimensions:
+                - Name: LoadBalancer
+                  Value: !Ref ApplicationLoadBalancerFullName
+              MetricName: HTTPCode_ELB_5XX_Count
+              Namespace: AWS/ApplicationELB
+            Period: 60
+            Stat: Sum
+          ReturnData: False
+        - Id: m3
+          MetricStat:
+            Metric:
+              Dimensions:
+                - Name: LoadBalancer
+                  Value: !Ref ApplicationLoadBalancerFullName
+                - Name: TargetGroup
+                  Value: !GetAtt TargetGroup.TargetGroupFullName
+              MetricName: HTTPCode_Target_4XX_Count
+              Namespace: AWS/ApplicationELB
+            Period: 60
+            Stat: Sum
+          ReturnData: False
+        - Id: m4
+          MetricStat:
+            Metric:
+              Dimensions:
+                - Name: LoadBalancer
+                  Value: !Ref ApplicationLoadBalancerFullName
+                - Name: TargetGroup
+                  Value: !GetAtt TargetGroup.TargetGroupFullName
+              MetricName: HTTPCode_Target_5XX_Count
+              Namespace: AWS/ApplicationELB
+            Period: 60
+            Stat: Sum
+          ReturnData: False          
+        - Id: m5
+          MetricStat:
+            Metric:
+              Dimensions:
+                - Name: LoadBalancer
+                  Value: !Ref ApplicationLoadBalancerFullName
+              MetricName: RequestCount
+              Namespace: AWS/ApplicationELB
+            Period: 60
+            Stat: Sum
+          ReturnData: False          
+        - Id: m6
+          MetricStat:
+            Metric:
+              Dimensions:
+                - Name: LoadBalancer
+                  Value: !Ref ApplicationLoadBalancerFullName
+                - Name: TargetGroup
+                  Value: !GetAtt TargetGroup.TargetGroupFullName
+              MetricName: RequestCountPerTarget
+              Namespace: AWS/ApplicationELB
+            Period: 60
+            Stat: Sum
+          ReturnData: False      
+        - Id: e1
+          Expression: IF((m5>=10 AND m1/m5>=0.9 OR m2/m5>=0.1) OR (m6>10 AND m3/m6>=0.9 OR m4/m6>=0.1), 1, 0)
+          Label: !Sub "${Project}-${Environment}-ExternalELBAlarm-oncall-metric"
+
   # NOTE: The error log alarm has been disabled due to a bug on hub-spid-login-ms that logs an error on each successfull login (HSL-17). 
   # Login service can still be monitored using spidhub-<codice-ambiente>-ExternalALBAlarm Alarm.
   # Create alarm

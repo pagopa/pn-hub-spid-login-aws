@@ -153,7 +153,7 @@ Resources:
         Ref: InternalSubnets
       LoadBalancerAttributes:
       - Key: idle_timeout.timeout_seconds
-        Value: '3600'
+        Value: '61'
       - Key: deletion_protection.enabled
         Value: 'false'
       - Key: routing.http2.enabled
@@ -371,86 +371,6 @@ Resources:
       Name:
         Fn::Sub: "*.${DomainName}"
       Type: A
-
-  ApplicationLoadBalancerAlarm:
-    Condition: AlarmEnabled
-    Type: AWS::CloudWatch::Alarm
-    Properties:
-      AlarmName: !Sub "${Project}-${Environment}-ExternalALBAlarm"
-      AlarmDescription: "CloudWatch alarm when an application load balancer respond with a HTTP status 500."
-      AlarmActions:
-        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
-      InsufficientDataActions:
-        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
-      OKActions:
-        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
-      DatapointsToAlarm: 1
-      Dimensions:
-        - Name: LoadBalancer
-          Value: !GetAtt ExternalApplicationLoadBalancer.LoadBalancerFullName
-      MetricName: HTTPCode_ELB_5XX_Count
-      Namespace: AWS/ApplicationELB
-      ComparisonOperator: GreaterThanOrEqualToThreshold
-      EvaluationPeriods: 1
-      Period: 60
-      Statistic: Sum
-      Threshold: 1
-      TreatMissingData: notBreaching
-
-  ApplicationLoadBalancerOnCallAlarm:
-    Condition: AlarmEnabled
-    Type: AWS::CloudWatch::Alarm
-    Properties:
-      AlarmName: !Sub "oncall-${Project}-${Environment}-ExternalALBAlarm"
-      AlarmDescription: "CloudWatch alarm when an application load balancer respond with a HTTP status 500."
-      AlarmActions:
-        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
-      InsufficientDataActions:
-        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
-      OKActions:
-        - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
-      DatapointsToAlarm: 1
-      ComparisonOperator: GreaterThanOrEqualToThreshold
-      EvaluationPeriods: 5
-      Threshold: 1
-      TreatMissingData: notBreaching
-      Metrics:
-        - Id: m1
-          MetricStat:
-            Metric:
-              Dimensions:
-                - Name: LoadBalancer
-                  Value: !GetAtt ExternalApplicationLoadBalancer.LoadBalancerFullName
-              MetricName: HTTPCode_ELB_4XX_Count
-              Namespace: AWS/ApplicationELB
-            Period: 60
-            Stat: Sum
-          ReturnData: False
-        - Id: m2
-          MetricStat:
-            Metric:
-              Dimensions:
-                - Name: LoadBalancer
-                  Value: !GetAtt ExternalApplicationLoadBalancer.LoadBalancerFullName
-              MetricName: HTTPCode_ELB_5XX_Count
-              Namespace: AWS/ApplicationELB
-            Period: 60
-            Stat: Sum
-          ReturnData: False
-        - Id: m3
-          MetricStat:
-            Metric:
-              Dimensions:
-                - Name: LoadBalancer
-                  Value: !GetAtt ExternalApplicationLoadBalancer.LoadBalancerFullName
-              MetricName: RequestCount
-              Namespace: AWS/ApplicationELB
-            Period: 60
-            Stat: Sum
-          ReturnData: False          
-        - Id: e1
-          Expression: IF(m3>=10 AND (m1/m3>=0.9 OR m2/m3>=0.1), 1, 0)
-          Label: !Sub "${Project}-${Environment}-ExternalALBAlarm-oncall-metric"
 
   # Associate Web ACLs with Rest API
   ThrottlingToLoadBalancerAssociation:

@@ -388,6 +388,7 @@ Resources:
         ConfigVersion: !Ref HubLoginConfigVersion
         Secrets: !Ref HubLoginSecrets
         DomainName: !Ref DomainName
+        ApplicationLoadBalancerFullName: !GetAtt Orchestrator.Outputs.ExternalALBFullName
         VpcId: !Ref BackEndVpcId
           #Fn::GetAtt:
           #- Network

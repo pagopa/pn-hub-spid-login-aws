@@ -265,7 +265,7 @@ Resources:
         Ref: Cluster
       EnableECSManagedTags: true
       EnableExecuteCommand: true
-      DesiredCount: 1
+      DesiredCount: 21
       LaunchType: FARGATE
       LoadBalancers:
       - ContainerName: main

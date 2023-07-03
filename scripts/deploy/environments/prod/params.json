@@ -21,7 +21,8 @@
     "HelpdeskAccountId": "510769970275",
     "LogextractorExecutionRole": "pn-logextractor-be-TaskRole",
     "VpcMode": "mono",
-    "SkipAlarmTopic": "true"
+    "SkipAlarmTopic": "true",
+    "CustomMetadataS3Path": "metadata/metadata-signed.xml"
   },
   "StackPolicy": {}
 }

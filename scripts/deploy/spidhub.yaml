@@ -498,6 +498,16 @@ Resources:
           - Outputs.ListenerHttps
       TemplateURL: ./stacks/custom-metadata.yaml
   
+  Healthcheck:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        ListenerArn:
+          Fn::GetAtt:
+          - Orchestrator
+          - Outputs.ListenerHttps
+      TemplateURL: ./stacks/healthcheck.yaml
+
   Dashboard:
     Type: AWS::CloudFormation::Stack
     DependsOn:

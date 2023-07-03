@@ -1,0 +1,36 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: SPID Hub - Health check for internal NLB
+
+Parameters:
+
+  ListenerArn:
+    Description: The ARN of the ALB Listener
+    Type: String
+
+
+Resources:
+
+  ListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+      - Type: fixed-response
+        FixedResponseConfig:
+          StatusCode: '200'
+          ContentType: text/html
+          MessageBody: |
+            <html>
+            <head><title>200 Piattaforma Notifiche</title></head>
+            <body>
+            <center>Piattaforma Notifiche</center>
+            </body>
+            </html>
+      Conditions:
+      - Field: path-pattern
+        PathPatternConfig:
+          Values:
+          - '/'
+      ListenerArn:
+        Ref: ListenerArn
+      Priority: 40

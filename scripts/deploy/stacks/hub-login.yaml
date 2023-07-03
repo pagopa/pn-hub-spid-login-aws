@@ -691,17 +691,19 @@ Resources:
       Threshold: 1
       TreatMissingData: notBreaching
       Metrics:
-        - Id: m1
-          MetricStat:
-            Metric:
-              Dimensions:
-                - Name: LoadBalancer
-                  Value: !Ref ApplicationLoadBalancerFullName
-              MetricName: HTTPCode_ELB_4XX_Count
-              Namespace: AWS/ApplicationELB
-            Period: 60
-            Stat: Sum
-          ReturnData: False
+        ## disalbed 4xx alb alarms becuase it is generating too many false positives
+        ## we need to enabled access log to dig it deeper
+        # - Id: m1
+        #   MetricStat:
+        #     Metric:
+        #       Dimensions:
+        #         - Name: LoadBalancer
+        #           Value: !Ref ApplicationLoadBalancerFullName
+        #       MetricName: HTTPCode_ELB_4XX_Count
+        #       Namespace: AWS/ApplicationELB
+        #     Period: 60
+        #     Stat: Sum
+        #   ReturnData: False
         - Id: m2
           MetricStat:
             Metric:
@@ -740,7 +742,7 @@ Resources:
             Stat: Sum
           ReturnData: False          
         - Id: e1
-          Expression: m1+m2+m3+m4
+          Expression: m2+m3+m4
           Label: !Sub "${Project}-${Environment}-ExternalELBAlarm-alarm-metric"
 
   ApplicationLoadBalancerOnCallAlarm:

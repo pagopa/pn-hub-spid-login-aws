@@ -1,5 +1,5 @@
 {
-  "host": "https://spid-saml-check.spid.notifichedigitali.it",
+  "host": "https://spid-saml-check.spid.hotfix.notifichedigitali.it",
   "port": 8080,
   "useProxy": true,
   "useHttps": false

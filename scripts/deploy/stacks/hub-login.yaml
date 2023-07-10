@@ -763,17 +763,18 @@ Resources:
       Threshold: 1
       TreatMissingData: notBreaching
       Metrics:
-        - Id: m1
-          MetricStat:
-            Metric:
-              Dimensions:
-                - Name: LoadBalancer
-                  Value: !Ref ApplicationLoadBalancerFullName
-              MetricName: HTTPCode_ELB_4XX_Count
-              Namespace: AWS/ApplicationELB
-            Period: 60
-            Stat: Sum
-          ReturnData: False
+        ## disalbed 4xx alb alarms becuase it is generating too many false positives
+        # - Id: m1
+        #   MetricStat:
+        #     Metric:
+        #       Dimensions:
+        #         - Name: LoadBalancer
+        #           Value: !Ref ApplicationLoadBalancerFullName
+        #       MetricName: HTTPCode_ELB_4XX_Count
+        #       Namespace: AWS/ApplicationELB
+        #     Period: 60
+        #     Stat: Sum
+        #   ReturnData: False
         - Id: m2
           MetricStat:
             Metric:
@@ -836,7 +837,7 @@ Resources:
             Stat: Sum
           ReturnData: False      
         - Id: e1
-          Expression: IF((m5>=10 AND m1/m5>=0.9 OR m2/m5>=0.1) OR (m6>10 AND m3/m6>=0.9 OR m4/m6>=0.1), 1, 0)
+          Expression: IF((m5>=10 AND m2/m5>=0.1) OR (m6>10 AND (m3/m6>=0.9 OR m4/m6>=0.1)), 1, 0)
           Label: !Sub "${Project}-${Environment}-ExternalELBAlarm-oncall-metric"
 
   # NOTE: The error log alarm has been disabled due to a bug on hub-spid-login-ms that logs an error on each successfull login (HSL-17). 

@@ -155,7 +155,7 @@ Mappings:
     hotfix:
       "Mode": "GOVERNANCE"      
     prod:
-      "Mode": "GOVERNANCE"
+      "Mode": "COMPLIANCE"
 
 Conditions:
   IsSvil: !Equals [!Ref Environment, "svil"]

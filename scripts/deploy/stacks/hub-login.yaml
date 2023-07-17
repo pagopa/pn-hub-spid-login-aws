@@ -398,8 +398,8 @@ Resources:
   ScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
     Properties:
-      MaxCapacity: !Ref MinTasksNumber
-      MinCapacity: !Ref MaxTasksNumber
+      MinCapacity: !Ref MinTasksNumber
+      MaxCapacity: !Ref MaxTasksNumber
       RoleARN:
         Fn::Sub: "arn:aws:iam::${AWS::AccountId}:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService"
       ServiceNamespace: ecs

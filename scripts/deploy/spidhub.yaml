@@ -305,6 +305,20 @@ Parameters:
     Description: Il numero di giorni dopo la creazione quando gli oggetti vengono eliminati da Amazon S3 e Amazon S3 Glacier. Questo vale per l'ambiente PROD
     Type: Number
 
+  MinTasksNumber:
+    Default: 2
+    Type: Number
+    Description: minimum autoscaling number of tasks
+
+  MaxTasksNumber:
+    Default: 2
+    Type: Number
+    Description: maximum autoscaling number of tasks
+  
+  AutoscalingThreshold:
+    Default: 326
+    Type: String
+
 Resources:
 
   # Network:
@@ -432,6 +446,9 @@ Resources:
         LogextractorExecutionRole: !Ref LogextractorExecutionRole
         LogRetention: !Ref LogRetention
         BucketLifecycleRetentionExpirationInDaysProd: !Ref BucketLifecycleRetentionExpirationInDaysProd
+        MinTasksNumber: !Ref MinTasksNumber
+        MaxTasksNumber: !Ref MaxTasksNumber
+        AutoscalingThreshold: !Ref AutoscalingThreshold
       TemplateURL: ./stacks/hub-login.yaml
 
   SpidSamlCheck:

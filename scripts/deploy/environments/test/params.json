@@ -21,7 +21,10 @@
     "HelpdeskAccountId": "151559006927",
     "LogextractorExecutionRole": "pn-logextractor-be-TaskRole",
     "VpcMode": "mono",
-    "SkipAlarmTopic": "true"
+    "SkipAlarmTopic": "true",
+    "MinTasksNumber": "2",
+    "MaxTasksNumber": "2",
+    "AutoscalingThreshold": "326"
   },
   "StackPolicy": {}
 }

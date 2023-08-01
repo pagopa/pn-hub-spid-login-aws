@@ -21,7 +21,10 @@
     "CacheNumberReplicas": "1",
     "CacheNodeType": "cache.t3.small",
     "CustomMetadataS3Path": "metadata/metadata-signed.xml",
-    "HelpdeskAccountId": "063295570123"
+    "HelpdeskAccountId": "063295570123",
+    "MinTasksNumber": "2",
+    "MaxTasksNumber": "2",
+    "AutoscalingThreshold": "326"
   },
   "StackPolicy": {}
 }

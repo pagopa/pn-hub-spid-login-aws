@@ -40,3 +40,24 @@ Resources:
         RestrictPublicBuckets: True
       VersioningConfiguration:
         Status: Enabled
+
+  AlbLogBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub pn-spidhub-alb-log-${AWS::AccountId}-${AWS::Region}
+
+  AlbLogBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties: 
+      Bucket: !Ref AlbLogBucket
+      PolicyDocument: 
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              # IDD of the AWS account for Elastic Load Balancing for Milan Region (https://docs.aws.amazon.com/elasticloadbalancing/latest/application/enable-access-logging.html)            
+              AWS: arn:aws:iam::635631232127:root
+            Action: s3:PutObject
+            Resource: !Sub arn:aws:s3:::${AlbLogBucket}/AWSLogs/${AWS::AccountId}/*

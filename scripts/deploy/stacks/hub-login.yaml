@@ -37,6 +37,11 @@ Parameters:
   Version:
     Description: The image version to use
     Type: String
+  
+  AutoscalingCheckPeriod:
+    Default: 60
+    Description: Tempo di misurazione delle metriche di autoscaling
+    Type: Number
 
   Storage:
     AllowedPattern: ^((?!xn--)(?!.*-s3alias)[a-z0-9][a-z0-9-]{1,61}[a-z0-9])$
@@ -136,6 +141,21 @@ Parameters:
   LogRetention:
     Type: Number
     Default: 14
+  
+  AutoscalingThreshold:
+    Default: 326
+    Type: String
+
+  MinTasksNumber:
+    Default: 1
+    Type: Number
+    Description: minimum autoscaling number of tasks
+
+  MaxTasksNumber:
+    Default: 1
+    Type: Number
+    Description: maximum autoscaling number of tasks
+
 
 ## Note: When adding a new Environment that requires Object Lock Enabled please remember to add the same in the mapping bellow as well as condition.
 Mappings:
@@ -332,26 +352,54 @@ Resources:
       VpcId:
         Ref: VpcId
 
-  ScalingPolicy:
+  #### Scaling Up Policy
+  ScaleUpPolicy:
     Type: AWS::ApplicationAutoScaling::ScalingPolicy
     Properties:
-      PolicyName:
-        Fn::Sub: "${Project}-${Environment}-${Name}"
-      PolicyType: TargetTrackingScaling
-      ScalingTargetId:
-        Ref: ScalableTarget
-      TargetTrackingScalingPolicyConfiguration:
-        TargetValue: 75.0
-        ScaleInCooldown: 60
-        ScaleOutCooldown: 60
-        PredefinedMetricSpecification:
-          PredefinedMetricType: ECSServiceAverageCPUUtilization
+      PolicyName: 'spidhub-ScaleUpPolicy'
+      PolicyType: StepScaling
+      ScalingTargetId: !Ref ScalableTarget
+      StepScalingPolicyConfiguration:
+        AdjustmentType: PercentChangeInCapacity
+        MinAdjustmentMagnitude: 1
+        Cooldown: !Ref AutoscalingCheckPeriod
+        MetricAggregationType: Average
+        StepAdjustments:
+          - MetricIntervalLowerBound: 0
+            MetricIntervalUpperBound: 25
+            ScalingAdjustment: 50
+          - MetricIntervalLowerBound: 25
+            MetricIntervalUpperBound: 50
+            ScalingAdjustment: 100
+          - MetricIntervalLowerBound: 50
+            MetricIntervalUpperBound: 75
+            ScalingAdjustment: 150
+          - MetricIntervalLowerBound: 75
+            ScalingAdjustment: 200
 
+  #### Scaling Down Policy
+  ScaleDownPolicy:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: 'spidhub-ScaleDownPolicy'
+      PolicyType: StepScaling
+      ScalingTargetId: !Ref ScalableTarget
+      StepScalingPolicyConfiguration:
+        AdjustmentType: ChangeInCapacity
+        Cooldown: !Ref AutoscalingCheckPeriod
+        MetricAggregationType: Average
+        StepAdjustments:
+          - MetricIntervalUpperBound: 0
+            MetricIntervalLowerBound: -30
+            ScalingAdjustment: -1
+          - MetricIntervalUpperBound: -30
+            ScalingAdjustment: -2
+  
   ScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
     Properties:
-      MaxCapacity: 21
-      MinCapacity: 21
+      MinCapacity: !Ref MinTasksNumber
+      MaxCapacity: !Ref MaxTasksNumber
       RoleARN:
         Fn::Sub: "arn:aws:iam::${AWS::AccountId}:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService"
       ServiceNamespace: ecs
@@ -363,6 +411,38 @@ Resources:
             Fn::GetAtt:
             - Service
             - Name
+  
+  #### Alarm for Rest-API metric Autoscaling
+  AlarmHighRequests:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: "spidhub-autoscaling-rest"
+      AlarmDescription: "Trigger scaling based on APIs"
+      ActionsEnabled: TRUE
+      ComparisonOperator: GreaterThanThreshold
+      DatapointsToAlarm: 1
+      EvaluationPeriods: 1
+      Threshold: 60
+      TreatMissingData: ignore
+      AlarmActions:
+        - !Ref ScaleUpPolicy
+      OKActions:
+        - !Ref ScaleDownPolicy
+      Metrics:
+        - Id: rpt
+          MetricStat:
+            Metric:
+              Namespace: AWS/ApplicationELB
+              MetricName: RequestCountPerTarget
+              Dimensions:
+                - Name: TargetGroup
+                  Value: !GetAtt TargetGroup.TargetGroupFullName
+            Period: !Ref AutoscalingCheckPeriod
+            Stat: Sum
+          ReturnData: False
+        - Id: req_per_targ
+          Expression: !Sub "(100 * rpt) / ${AutoscalingThreshold}"
+          Label: "spidhub-api-autoscale-metric"
 
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup

@@ -22,7 +22,6 @@
     "LogextractorExecutionRole": "pn-logextractor-be-TaskRole",
     "VpcMode": "mono",
     "SkipAlarmTopic": "true",
-    "CustomMetadataS3Path": "metadata/metadata-signed.xml",
     "MinTasksNumber": "2",
     "MaxTasksNumber": "2",
     "AutoscalingThreshold": "326"

@@ -21,9 +21,8 @@
     "HelpdeskAccountId": "207905393513",
     "LogextractorExecutionRole": "pn-logextractor-be-TaskRole",
     "VpcMode": "mono",
-    "SkipAlarmTopic": "true"
+    "SkipAlarmTopic": "true",
     "CustomMetadataS3Path": "metadata/metadata-signed.xml",
-    "HelpdeskAccountId": "063295570123",
     "MinTasksNumber": "2",
     "MaxTasksNumber": "2",
     "AutoscalingThreshold": "326"

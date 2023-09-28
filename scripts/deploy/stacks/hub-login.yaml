@@ -206,7 +206,7 @@ Resources:
       ContainerDefinitions:
       - Name: main
 #        Image: !Sub "ghcr.io/pagopa/hub-spid-login-ms:${Version}"
-        Image: "911845998067.dkr.ecr.eu-south-1.amazonaws.com/hub-spid-login-ms:2e8b34a95bd38a1712b03bd56d0663ac6c97286e"
+        Image: "911845998067.dkr.ecr.eu-south-1.amazonaws.com/hub-spid-login-ms:7a10088af7f12119c87701597a4efcaba0cef037"
         Cpu: 2048
         Memory: 4096
         #MemoryReservation: 512

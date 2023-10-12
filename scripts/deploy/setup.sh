@@ -43,6 +43,13 @@ secretPresent=$( aws \
   --no-paginate \
   | jq -r ".SecretList | .[] | select(.Name==\"$PROJECT-$ENVIRONMENT-hub-login\")" | wc -l )
 
+logSecretPresent=$( aws \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  secretsmanager list-secrets \
+  --no-paginate \
+  | jq -r ".SecretList | .[] | select(.Name==\"$PROJECT-$ENVIRONMENT-hub-login-logs\")" | wc -l )
+
 
 hubLoginEnvFile="./environments/$ENVIRONMENT/storage/config/hub-login/v1/.env"
 if ( [ $secretPresent -eq 0 ] ) then
@@ -82,7 +89,24 @@ if ( [ $secretPresent -eq 0 ] ) then
     secretsmanager create-secret \
     --name $PROJECT-$ENVIRONMENT-hub-login \
     --secret-string "$SecretString"
+
+  # set private key to decrypt logs in a specific secret
+  LogsPrivateKey=$( sed -e 's/$/\\n/' "./environments/$ENVIRONMENT/logs/logs_rsa_key.pem" | tr -d '\n' | sed -e 's/\\n$//' )
+  LogsSecretString=$(echo "{\"LogsPrivateKey\":\"$LogsPrivateKey\"}")
+
+  aws \
+    --profile "$AWS_PROFILE" \
+    --region "$AWS_REGION" \
+    secretsmanager create-secret \
+    --name $PROJECT-$ENVIRONMENT-hub-login-logs \
+    --secret-string "$SecretString"
+
 else
+  if ( [ $logSecretPresent -eq 0 ] ) then
+    echo "Warning: the secret $PROJECT-$ENVIRONMENT-hub-login-logs doesn't exist, please create it using generate-logs-keys.sh script"
+    exit 1
+  fi
+
   Kid=$(aws \
     --profile "$AWS_PROFILE" \
     --region "$AWS_REGION" \

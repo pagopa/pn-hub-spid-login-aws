@@ -223,7 +223,7 @@ Resources:
           Value: 'true'
         - Name: SPID_LOGS_STORAGE_CONTAINER_NAME
           Value:
-            Ref: SamlAssertionLogBucket
+            Ref: SamlAssertionLogBucketV1
         EnvironmentFiles:
         - Type: s3
           Value:
@@ -518,7 +518,7 @@ Resources:
           Action:
           - s3:PutObject
           Resource:
-          - Fn::Sub: "arn:aws:s3:::${SamlAssertionLogBucket}/*"
+          - Fn::Sub: "arn:aws:s3:::${SamlAssertionLogBucketV1}/*"
 
   TaskExecutionRole:
     Type: AWS::IAM::Role
@@ -654,7 +654,7 @@ Resources:
                 aws:PrincipalArn: !Sub "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:role/${LogextractorExecutionRole}"
           - !Ref AWS::NoValue
 
-  SamlAssertionLogBucket:
+  SamlAssertionLogBucketV1:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
@@ -949,7 +949,7 @@ Resources:
     Type: AWS::S3::BucketPolicy
     Condition: HasHelpdeskAccountId
     Properties: 
-      Bucket: !Ref SamlAssertionLogBucket
+      Bucket: !Ref SamlAssertionLogBucketV1
       PolicyDocument: !Sub |
         {
           "Version": "2012-10-17",
@@ -964,7 +964,7 @@ Resources:
                 "s3:Get*"
               ],
               "Resource": [
-                "arn:${AWS::Partition}:s3:::${SamlAssertionLogBucket}/*"
+                "arn:${AWS::Partition}:s3:::${SamlAssertionLogBucketV1}/*"
               ],
               "Condition": {
                 "ArnEquals": {"aws:PrincipalArn": "arn:${AWS::Partition}:iam::${HelpdeskAccountId}:role/${LogextractorExecutionRole}"}
@@ -977,7 +977,7 @@ Outputs:
   SamlAssertionLogBucket:
     Description: The ARN of the SAML Assertion Bucket
     Value:
-      Ref: SamlAssertionLogBucket
+      Ref: SamlAssertionLogBucketV1
 
   ServiceName:
     Description: Saml check service name

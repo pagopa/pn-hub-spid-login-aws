@@ -22,8 +22,9 @@
     "LogextractorExecutionRole": "pn-logextractor-be-TaskRole",
     "VpcMode": "mono",
     "SkipAlarmTopic": "true",
+    "CustomMetadataS3Path": "",
     "MinTasksNumber": "2",
-    "MaxTasksNumber": "2",
+    "MaxTasksNumber": "21",
     "AutoscalingThreshold": "326"
   },
   "StackPolicy": {}

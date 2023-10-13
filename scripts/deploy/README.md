@@ -36,3 +36,14 @@ CloudFormation template, which in turns deploy its nested stacks (i.e. fragments
 
 By running the `setup.sh` script, all the necessary resources will be provisioned
 and the microservices will be up and running.
+
+## Logs keys generation
+
+`/.generate-logs-keys.sh <aws-profile> <aws-region> <env>`
+
+e.g. `./generate-logs-keys.sh sso_pn-confinfo-dev eu-south-1 dev`
+
+The script will create a secret `spidhub-<env>-hub-login-logs` with the private key and print the public key to update in the secret `spidhub-<env>-hub-login` in the key `LogsPublicKey` (make sure to edit the secret json as raw string).
+The content of the public key will be printed between these two lines:
+- `==== Start LogsPublicKey to Update in Secret spidub-<env>-hub-login ==== `
+- `==== End LogsPublicKey to Update in Secret spidub-<env>-hub-login ==== `

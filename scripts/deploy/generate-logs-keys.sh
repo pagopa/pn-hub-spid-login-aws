@@ -32,7 +32,7 @@ secretPresent=$( aws \
   --profile "$AWS_PROFILE" \
   --region "$AWS_REGION" \
   secretsmanager list-secrets \
-  --no-paginate \
+  --max-items 100 \
   | jq -r ".SecretList | .[] | select(.Name==\"$PROJECT-$ENVIRONMENT-hub-login-logs\")" | wc -l )
 
 
@@ -63,5 +63,7 @@ if ( [ $secretPresent -eq 0 ] ) then
     secretsmanager create-secret \
     --name $PROJECT-$ENVIRONMENT-hub-login-logs \
     --secret-string "$SecretString"
+else
+  echo "Secret $PROJECT-$ENVIRONMENT-hub-login-logs already present"
 fi
 

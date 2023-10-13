@@ -40,16 +40,17 @@ secretPresent=$( aws \
   --profile "$AWS_PROFILE" \
   --region "$AWS_REGION" \
   secretsmanager list-secrets \
-  --no-paginate \
+  --max-items 100 \
   | jq -r ".SecretList | .[] | select(.Name==\"$PROJECT-$ENVIRONMENT-hub-login\")" | wc -l )
 
 logSecretPresent=$( aws \
   --profile "$AWS_PROFILE" \
   --region "$AWS_REGION" \
   secretsmanager list-secrets \
-  --no-paginate \
+  --max-items 100 \
   | jq -r ".SecretList | .[] | select(.Name==\"$PROJECT-$ENVIRONMENT-hub-login-logs\")" | wc -l )
 
+echo "LOG SECRET "$logSecretPresent
 
 hubLoginEnvFile="./environments/$ENVIRONMENT/storage/config/hub-login/v1/.env"
 if ( [ $secretPresent -eq 0 ] ) then
@@ -103,8 +104,8 @@ if ( [ $secretPresent -eq 0 ] ) then
 
 else
   if ( [ $logSecretPresent -eq 0 ] ) then
-    echo "Warning: the secret $PROJECT-$ENVIRONMENT-hub-login-logs doesn't exist, please create it using generate-logs-keys.sh script"
-    exit 1
+   echo "Warning: the secret $PROJECT-$ENVIRONMENT-hub-login-logs doesn't exist, please create it using generate-logs-keys.sh script"
+   exit 1
   fi
 
   Kid=$(aws \

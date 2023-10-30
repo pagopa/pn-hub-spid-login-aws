@@ -10,7 +10,7 @@
     "InternalNlbIps": "10.14.40.220,10.14.41.220,10.14.42.220",
     "DomainName": "spid.hotfix.notifichedigitali.it",
     "HostedZoneId": "Z0782364U99DF4ITKMZT",
-    "HubLoginVersion": "5.0.3-RELEASE@sha256:234d4a13ce635dbcd4e57947bbed7660c5970f05a8970dd63701e1da9e8db101",
+    "HubLoginVersion": "5.3.0-RELEASE@sha256:71f1daeeb5cec25ed2bf6d2cad56ff1e14eddca75dbf3bd666d594afd62a04e3",
     "HubLoginConfigVersion": "v1",
     "HubLoginSecrets": "spidhub-hotfix-hub-login",
     "SpidSamlCheckVersion": "v.1.8.3-snapshot",

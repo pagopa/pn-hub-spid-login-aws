@@ -546,6 +546,11 @@ Resources:
       - Key: Name
         Value:
           Fn::Sub: "${Project}-${Environment}-a"
+      - Key: pn-eni-related
+        Value: "true"
+      - Key: pn-eni-related-groupName-regexp
+        Value: "^Interface for NAT Gateway.*$"
+
 
   NatGatewayB:
     DependsOn:
@@ -562,6 +567,11 @@ Resources:
       - Key: Name
         Value:
           Fn::Sub: "${Project}-${Environment}-b"
+      - Key: pn-eni-related
+        Value: "true"
+      - Key: pn-eni-related-groupName-regexp
+        Value: "^Interface for NAT Gateway.*$"
+
 
   NatGatewayC:
     DependsOn:
@@ -578,6 +588,11 @@ Resources:
       - Key: Name
         Value:
           Fn::Sub: "${Project}-${Environment}-c"
+      - Key: pn-eni-related
+        Value: "true"
+      - Key: pn-eni-related-groupName-regexp
+        Value: "^Interface for NAT Gateway.*$"
+
 
   VpcFlowLog:
     Type: AWS::EC2::FlowLog

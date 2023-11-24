@@ -264,7 +264,12 @@ Resources:
         Value: !Sub pn-spidhub-alb-log-${AWS::AccountId}-${AWS::Region}
       SecurityGroups:
       - Ref: ExternalAlbSecurityGroup
-  
+      Tags:
+        - Key: pn-eni-related
+          Value: "true"
+        - Key: pn-eni-related-groupName-regexp
+          Value: "^spidhub-prod-Orchestrator.*ExternalAlbSecurityGroup.*$"
+ 
   ExternalAlbListenerHttps:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:

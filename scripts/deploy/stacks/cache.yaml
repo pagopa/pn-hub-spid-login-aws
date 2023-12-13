@@ -121,7 +121,7 @@ Resources:
         - Key: pn-eni-related
           Value: "true"
         - Key: pn-eni-related-groupName-regexp
-          Value: "^spidhub-prod-Cache.*$"
+          Value: !Base64 "^spidhub-prod-Cache.*$"
 
   SubnetGroup:
     Type: AWS::ElastiCache::SubnetGroup

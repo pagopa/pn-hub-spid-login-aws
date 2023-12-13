@@ -164,7 +164,7 @@ Resources:
         - Key: pn-eni-related
           Value: "true"
         - Key: pn-eni-related-groupName-regexp
-          Value: "^spidhub-prod-Orchestrator.*InternalAlbSecurityGroup.*$"
+          Value: !Base64 "^spidhub-prod-Orchestrator.*InternalAlbSecurityGroup.*$"
 
 
   InternalAlbListenerHttp:
@@ -208,7 +208,7 @@ Resources:
         - Key: pn-eni-related
           Value: "true"
         - Key: pn-eni-related-groupName-regexp
-          Value: "^ELB net/spidh-Inter-.*$"
+          Value: !Base64 "^ELB net/spidh-Inter-.*$"
       
   InternalNlbListenerHttp:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -279,7 +279,7 @@ Resources:
         - Key: pn-eni-related
           Value: "true"
         - Key: pn-eni-related-groupName-regexp
-          Value: "^spidhub-prod-Orchestrator.*ExternalAlbSecurityGroup.*$"
+          Value: !Base64 "^spidhub-prod-Orchestrator.*ExternalAlbSecurityGroup.*$"
  
   ExternalAlbListenerHttps:
     Type: AWS::ElasticLoadBalancingV2::Listener

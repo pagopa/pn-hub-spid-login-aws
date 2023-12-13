@@ -310,7 +310,7 @@ Resources:
         - Key: pn-eni-related
           Value: "true"
         - Key: pn-eni-related-groupName-regexp
-          Value: "^spidhub-prod-HubLogin.*$"       
+          Value: !Base64 "^spidhub-prod-HubLogin.*$"       
 
   ListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule

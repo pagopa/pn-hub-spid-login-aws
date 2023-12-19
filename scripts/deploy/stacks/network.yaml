@@ -548,7 +548,7 @@ Resources:
           Fn::Sub: "${Project}-${Environment}-a"
       - Key: pn-eni-related
         Value: "true"
-      - Key: pn-eni-related-groupName-regexp
+      - Key: pn-eni-related-description-regexp
         Value: !Base64 "^Interface for NAT Gateway.*$"
 
 
@@ -569,7 +569,7 @@ Resources:
           Fn::Sub: "${Project}-${Environment}-b"
       - Key: pn-eni-related
         Value: "true"
-      - Key: pn-eni-related-groupName-regexp
+      - Key: pn-eni-related-description-regexp
         Value: !Base64 "^Interface for NAT Gateway.*$"
 
 
@@ -590,7 +590,7 @@ Resources:
           Fn::Sub: "${Project}-${Environment}-c"
       - Key: pn-eni-related
         Value: "true"
-      - Key: pn-eni-related-groupName-regexp
+      - Key: pn-eni-related-description-regexp
         Value: !Base64 "^Interface for NAT Gateway.*$"
 
 

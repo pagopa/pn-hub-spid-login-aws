@@ -306,6 +306,11 @@ Resources:
         Fn::Sub: "${Project}-${Environment}-${Name}"
       TaskDefinition:
         Ref: TaskDefinition
+      Tags:
+        - Key: pn-eni-related
+          Value: "true"
+        - Key: pn-eni-related-groupName-regexp
+          Value: !Base64 "^spidhub-prod-HubLogin.*$"       
 
   ListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule

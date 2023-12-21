@@ -117,6 +117,11 @@ Resources:
       SnapshotRetentionLimit: 5
       SnapshotWindow: 05:00-09:00
       TransitEncryptionEnabled: true
+      Tags:
+        - Key: pn-eni-related
+          Value: "true"
+        - Key: pn-eni-related-groupName-regexp
+          Value: !Base64 "^spidhub-prod-Cache.*$"
 
   SubnetGroup:
     Type: AWS::ElastiCache::SubnetGroup

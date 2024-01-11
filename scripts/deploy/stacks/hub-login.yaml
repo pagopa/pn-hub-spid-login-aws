@@ -205,8 +205,8 @@ Resources:
     Properties:
       ContainerDefinitions:
       - Name: main
-#        Image: !Sub "ghcr.io/pagopa/hub-spid-login-ms:${Version}"
-        Image: "911845998067.dkr.ecr.eu-south-1.amazonaws.com/hub-spid-login-ms:7a10088af7f12119c87701597a4efcaba0cef037"
+        Image: !Sub "ghcr.io/pagopa/hub-spid-login-ms:${Version}"
+#        Image: "911845998067.dkr.ecr.eu-south-1.amazonaws.com/hub-spid-login-ms:7a10088af7f12119c87701597a4efcaba0cef037"
         Cpu: 2048
         Memory: 4096
         #MemoryReservation: 512
@@ -306,6 +306,11 @@ Resources:
         Fn::Sub: "${Project}-${Environment}-${Name}"
       TaskDefinition:
         Ref: TaskDefinition
+      Tags:
+        - Key: pn-eni-related
+          Value: "true"
+        - Key: pn-eni-related-groupName-regexp
+          Value: !Base64 "^spidhub-prod-HubLogin.*$"       
 
   ListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -837,9 +842,9 @@ Resources:
         - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
       OKActions:
         - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AlarmSNSTopicName}'
-      DatapointsToAlarm: 1
+      DatapointsToAlarm: 5
       ComparisonOperator: GreaterThanOrEqualToThreshold
-      EvaluationPeriods: 5
+      EvaluationPeriods: 30
       Threshold: 1
       TreatMissingData: notBreaching
       Metrics:
@@ -917,7 +922,7 @@ Resources:
             Stat: Sum
           ReturnData: False      
         - Id: e1
-          Expression: IF((m5>=10 AND m2/m5>=0.1) OR (m6>10 AND (m3/m6>=0.9 OR m4/m6>=0.1)), 1, 0)
+          Expression: IF((m5>=10 AND m2/m5>=0.3) OR (m6>10 AND (m3/m6>=0.9 OR m4/m6>=0.3)), 1, 0)
           Label: !Sub "${Project}-${Environment}-ExternalELBAlarm-oncall-metric"
 
   # NOTE: The error log alarm has been disabled due to a bug on hub-spid-login-ms that logs an error on each successfull login (HSL-17). 

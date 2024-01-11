@@ -160,6 +160,12 @@ Resources:
         Value: 'true'
       SecurityGroups:
       - Ref: InternalAlbSecurityGroup
+      Tags:
+        - Key: pn-eni-related
+          Value: "true"
+        - Key: pn-eni-related-groupName-regexp
+          Value: !Base64 "^spidhub-prod-Orchestrator.*InternalAlbSecurityGroup.*$"
+
 
   InternalAlbListenerHttp:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -198,6 +204,11 @@ Resources:
       LoadBalancerAttributes:
       - Key: deletion_protection.enabled
         Value: 'false'
+      Tags:
+        - Key: pn-eni-related
+          Value: "true"
+        - Key: pn-eni-related-description-regexp
+          Value: !Base64 "^ELB net/spidh-Inter-.*$"
       
   InternalNlbListenerHttp:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -264,7 +275,12 @@ Resources:
         Value: !Sub pn-spidhub-alb-log-${AWS::AccountId}-${AWS::Region}
       SecurityGroups:
       - Ref: ExternalAlbSecurityGroup
-  
+      Tags:
+        - Key: pn-eni-related
+          Value: "true"
+        - Key: pn-eni-related-groupName-regexp
+          Value: !Base64 "^spidhub-prod-Orchestrator.*ExternalAlbSecurityGroup.*$"
+ 
   ExternalAlbListenerHttps:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:

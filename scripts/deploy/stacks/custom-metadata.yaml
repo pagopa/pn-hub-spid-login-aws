@@ -72,7 +72,7 @@ Resources:
         Variables:
           METADATA_PATH: !Ref CustomMetadataS3Path 
           BUCKET: !Ref Storage 
-      Runtime: nodejs18.x
+      Runtime: nodejs20.x
       Role: !GetAtt CustomMetadataExecutionRole.Arn
 
   CustomMetadataExecutionRole:

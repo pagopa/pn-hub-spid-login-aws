@@ -42,7 +42,7 @@ Resources:
         ZipFile: |
           const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
 
-          const client = new S3Client({region: process.env.Region});
+          const client = new S3Client();
   
           exports.lambda_handler = async (event) => {
 

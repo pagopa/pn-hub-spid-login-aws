@@ -40,36 +40,39 @@ Resources:
     Properties:
       Code:
         ZipFile: |
-            const AWS = require('aws-sdk');
-            exports.lambda_handler = async (event) => {
-              let S3 = new AWS.S3();
+          const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
 
-              const params = {
-                Bucket: process.env.BUCKET,
-                Key: process.env.METADATA_PATH
+          const client = new S3Client();
+  
+          exports.lambda_handler = async (event) => {
+
+            const params = {
+              Bucket: process.env.BUCKET,
+              Key: process.env.METADATA_PATH
+            }
+            const data = await client.send(new GetObjectCommand(params));
+            const metadataBody = await data.Body.transformToString();
+            
+            const response = {
+              "statusCode": 200,
+              "statusDescription": "200 OK",
+              "isBase64Encoded": false,
+              "headers": {
+                "Content-Type": "text/xml; charset=utf-8"
               }
+            }
+            
+            response.body = metadataBody;
+            return response
+          };
 
-              const data = await S3.getObject(params).promise()
-              const metadataBody = data.Body.toString('utf-8');
 
-              const response = {
-                "statusCode": 200,
-                "statusDescription": "200 OK",
-                "isBase64Encoded": false,
-                "headers": {
-                  "Content-Type": "text/xml; charset=utf-8"
-                }
-              }
-
-              response.body = metadataBody;
-              return response
-            };
       Handler: index.lambda_handler
       Environment:
         Variables:
           METADATA_PATH: !Ref CustomMetadataS3Path 
           BUCKET: !Ref Storage 
-      Runtime: nodejs16.x
+      Runtime: nodejs20.x
       Role: !GetAtt CustomMetadataExecutionRole.Arn
 
   CustomMetadataExecutionRole:

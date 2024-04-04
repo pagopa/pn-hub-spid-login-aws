@@ -1006,5 +1006,33 @@
     "domicileMunicipality": "",
     "domicileProvince": "",
     "domicileNation": ""
+  },
+  {
+    "username": "lucaverdi",
+    "password": "password123",
+    "spidLevel": 2,
+    "spidCode": "SPID-025",
+    "familyName": "Verdi",
+    "name": "Luca",
+    "gender": "M",
+    "dateOfBirth": "01/01/1980",
+    "countyOfBirth": "RM",
+    "placeOfBirth": "H501",
+    "idCard": "",
+    "expirationDate": "2040-06-05",
+    "fiscalNumber": "TINIT-VRDLCU80A01H501G",
+    "mobilePhone": "33312345698",
+    "email": "prova@example.com",
+    "digitalAddress": "prova@example.com",
+    "ivaCode": "",
+    "companyName": "",
+    "registeredOffice": "",
+    "companyFiscalNumber": "",
+    "address": "",
+    "domicileStreetAddress": "",
+    "domicilePostalCode": "",
+    "domicileMunicipality": "",
+    "domicileProvince": "",
+    "domicileNation": ""
   }
 ]	

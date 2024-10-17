@@ -1034,5 +1034,33 @@
     "domicileMunicipality": "",
     "domicileProvince": "",
     "domicileNation": ""
+  },
+  {
+    "username": "delegante",
+    "password": "password123",
+    "spidLevel": 2,
+    "spidCode": "SPID-060",
+    "familyName": "Delegante Intermediario",
+    "name": "Sperimentatore",
+    "gender": "M",
+    "dateOfBirth": "01/05/1980",
+    "countyOfBirth": "GE",
+    "placeOfBirth": "D969E",
+    "idCard": "",
+    "expirationDate": "2040-06-05",
+    "fiscalNumber": "TINIT-SPRMRA80E01D969E",
+    "mobilePhone": "33312345698",
+    "email": "prova@example.com",
+    "digitalAddress": "prova@example.com",
+    "ivaCode": "",
+    "companyName": "",
+    "registeredOffice": "",
+    "companyFiscalNumber": "",
+    "address": "",
+    "domicileStreetAddress": "",
+    "domicilePostalCode": "",
+    "domicileMunicipality": "",
+    "domicileProvince": "",
+    "domicileNation": ""
   }
 ]	

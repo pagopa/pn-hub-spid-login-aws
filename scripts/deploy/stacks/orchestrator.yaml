@@ -90,6 +90,13 @@ Parameters:
       - 'multi'
       - 'mono'
 
+  ContainerInsightEnabling:
+    Type: String
+    Default: 'enabled'
+    AllowedValues:
+      - 'enabled'
+      - 'disabled'
+
 Conditions:
   AlarmEnabled: !Not
     - !Equals
@@ -114,7 +121,7 @@ Resources:
       - FARGATE
       ClusterSettings:
       - Name: containerInsights
-        Value: enabled
+        Value: !Ref ContainerInsightEnabling
       Configuration:
         ExecuteCommandConfiguration:
           LogConfiguration:

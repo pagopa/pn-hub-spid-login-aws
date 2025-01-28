@@ -25,7 +25,8 @@
     "CustomMetadataS3Path": "metadata/metadata-signed.xml",
     "MinTasksNumber": "2",
     "MaxTasksNumber": "21",
-    "AutoscalingThreshold": "326"
+    "AutoscalingThreshold": "326",
+    "ContainerInsightEnabling": "disabled"
   },
   "StackPolicy": {}
 }

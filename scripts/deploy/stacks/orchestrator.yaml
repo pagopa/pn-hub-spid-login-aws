@@ -90,6 +90,7 @@ Parameters:
       - 'multi'
       - 'mono'
 
+
 Conditions:
   AlarmEnabled: !Not
     - !Equals
@@ -114,7 +115,7 @@ Resources:
       - FARGATE
       ClusterSettings:
       - Name: containerInsights
-        Value: enabled
+        Value: disabled
       Configuration:
         ExecuteCommandConfiguration:
           LogConfiguration:

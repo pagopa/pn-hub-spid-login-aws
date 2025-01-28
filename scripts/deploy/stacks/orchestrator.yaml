@@ -90,12 +90,6 @@ Parameters:
       - 'multi'
       - 'mono'
 
-  ContainerInsightEnabling:
-    Type: String
-    Default: 'enabled'
-    AllowedValues:
-      - 'enabled'
-      - 'disabled'
 
 Conditions:
   AlarmEnabled: !Not

@@ -121,7 +121,7 @@ Resources:
       - FARGATE
       ClusterSettings:
       - Name: containerInsights
-        Value: !Ref ContainerInsightEnabling
+        Value: disabled
       Configuration:
         ExecuteCommandConfiguration:
           LogConfiguration:

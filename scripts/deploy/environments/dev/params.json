@@ -24,8 +24,7 @@
     "SkipAlarmTopic": "true",
     "MinTasksNumber": "2",
     "MaxTasksNumber": "21",
-    "AutoscalingThreshold": "326",
-    "ContainerInsightEnabling": "disabled"
+    "AutoscalingThreshold": "326"
   },
   "StackPolicy": {}
 }

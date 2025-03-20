@@ -10,7 +10,7 @@
     "InternalNlbIps": "10.5.40.220,10.5.41.220,10.5.42.220",
     "DomainName": "spid.test.notifichedigitali.it",
     "HostedZoneId": "Z0387379ZKMAKOANQ2QH",
-    "HubLoginVersion": "5.3.2-RELEASE@sha256:5f1e0727f7812911c2680dc4d85335beed5eacaf7d328040a3cc79fac864ef4c",
+    "HubLoginVersion": "5.5.0-RELEASE",
     "HubLoginConfigVersion": "v1",
     "HubLoginSecrets": "spidhub-test-hub-login",
     "SpidSamlCheckVersion": "v.1.8.3-snapshot",

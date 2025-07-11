@@ -19,6 +19,10 @@ Parameters:
     Type: String
     Description: Bucket Name
 
+  AlbLogBucketRetention:
+    Type: String
+    Description: Retention of bucket 
+
 Resources:
 
   Storage:
@@ -47,6 +51,11 @@ Resources:
     UpdateReplacePolicy: Retain
     Properties:
       BucketName: !Sub pn-spidhub-alb-log-${AWS::AccountId}-${AWS::Region}
+      LifecycleConfiguration:
+        Rules:
+          - Id: ExpirationRule
+            Status: Enabled
+            ExpirationInDays: !Ref AlbLogBucketRetention
 
   AlbLogBucketPolicy:
     Type: AWS::S3::BucketPolicy

@@ -3,6 +3,7 @@
     "Project": "spidhub",
     "Environment": "prod",
     "Storage": "spidhub-350578575906-prod-eu-south-1-spid",
+    "AlbLogsStorageRetention": "90",
     "FrontEndVpcId":"vpc-0f455b93c3ac67bf1",
     "BackEndVpcId":"vpc-0f455b93c3ac67bf1",
     "FrontEndSubnets": "subnet-0e178c0234c26f8f8,subnet-021ea5c76a9f35101,subnet-07ca68e4a3edb5685",

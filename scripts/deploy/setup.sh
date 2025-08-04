@@ -29,6 +29,9 @@ UserRegistryApiKey=$4
 BucketName=$(cat "./environments/$ENVIRONMENT/params.json" \
     | jq -r ".Parameters.Storage")
     
+AlbLogBucketRetention=$(cat "./environments/$ENVIRONMENT/params.json" \
+    | jq -r ".Parameters.AlbLogsStorageRetention")
+
 echo "Bucket Name:" ${BucketName}
 
 PROJECT=spidhub
@@ -124,7 +127,7 @@ aws \
   cloudformation deploy \
   --template-file "./stacks/storage.yaml" \
   --stack-name "$PROJECT-$ENVIRONMENT-storage" \
-  --parameter-overrides Project=$PROJECT Environment=$ENVIRONMENT BucketName=$BucketName \
+  --parameter-overrides Project=$PROJECT Environment=$ENVIRONMENT BucketName=$BucketName AlbLogBucketRetention=$AlbLogBucketRetention \
   --tags Project=$PROJECT Environment=$ENVIRONMENT \
   --no-fail-on-empty-changeset
 

@@ -3,6 +3,7 @@
     "Project": "spidhub",
     "Environment": "hotfix",
     "Storage": "spidhub-839620963891-2-hotfix-eu-south-1-spid",
+    "AlbLogsStorageRetention": "15",
     "FrontEndVpcId":"vpc-07ad91720d41ef060",
     "BackEndVpcId":"vpc-07ad91720d41ef060",
     "FrontEndSubnets": "subnet-05a92655154140bbb,subnet-0098184dc2d230514,subnet-08e4c22583e264a09",

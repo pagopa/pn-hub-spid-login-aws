@@ -30,7 +30,7 @@ BucketName=$(cat "./environments/$ENVIRONMENT/params.json" \
     | jq -r ".Parameters.Storage")
     
 AlbLogBucketRetention=$(cat "./environments/$ENVIRONMENT/params.json" \
-    | jq -r ".Parameters.StorageRetention")
+    | jq -r ".Parameters.AlbLogsStorageRetention")
 
 echo "Bucket Name:" ${BucketName}
 

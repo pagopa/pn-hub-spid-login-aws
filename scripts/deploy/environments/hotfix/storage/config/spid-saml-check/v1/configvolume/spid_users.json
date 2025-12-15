@@ -1230,5 +1230,33 @@
     "domicileMunicipality": "",
     "domicileProvince": "",
     "domicileNation": ""
+  },
+  {
+    "username": "AlfonsoBorbone",
+    "password": "password123",
+    "spidLevel": 2,
+    "spidCode": "SPID-061",
+    "familyName": "Maria Isabella Francesco Eugenio Gabriele Pietro Sebastiano Pelayo Ferdinando Francesco Paola Michele Raffaele Giuseppe Gioachino",
+    "name": "Alfonso",
+    "gender": "M",
+    "dateOfBirth": "1942-01-01",
+    "countyOfBirth": "RM",
+    "placeOfBirth": "H501",
+    "idCard": "cartaIdentita FR160452 comuneVinci 2001-04-15 2023-04-15",
+    "expirationDate": "2040-06-05",
+    "fiscalNumber": "TINIT-MRSLNS42A01H501Y",
+    "mobilePhone": "3883883893",
+    "email": "CaffeNobileBorboneFakeMail@outlook.com",
+    "digitalAddress": "",
+    "ivaCode": "",
+    "companyName": "",
+    "registeredOffice": "",
+    "companyFiscalNumber": "",
+    "address": "Via Listz 21 00144 Roma",
+    "domicileStreetAddress": "Via Listz 21",
+    "domicilePostalCode": "00144",
+    "domicileMunicipality": "Roma",
+    "domicileProvince": "RM",
+    "domicileNation": "IT"
   }
 ]	

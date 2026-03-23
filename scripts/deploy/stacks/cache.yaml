@@ -87,7 +87,7 @@ Resources:
       AtRestEncryptionEnabled: true
       AuthToken:
         Fn::Sub: "{{resolve:secretsmanager:${AuthToken}:SecretString:AuthToken}}"
-      AutomaticFailoverEnabled: false
+      AutomaticFailoverEnabled: true
       AutoMinorVersionUpgrade: true
       CacheNodeType:
         Ref: CacheNodeType

@@ -87,7 +87,7 @@ Resources:
       AtRestEncryptionEnabled: true
       AuthToken:
         Fn::Sub: "{{resolve:secretsmanager:${AuthToken}:SecretString:AuthToken}}"
-      AutomaticFailoverEnabled: false
+      AutomaticFailoverEnabled: true
       AutoMinorVersionUpgrade: true
       CacheNodeType:
         Ref: CacheNodeType
@@ -105,7 +105,7 @@ Resources:
         DestinationType: cloudwatch-logs
         LogFormat: text
         LogType: engine-log
-      MultiAZEnabled: false
+      MultiAZEnabled: true
       # NumCacheClusters: 1
       ReplicasPerNodeGroup: !Ref CacheNumberReplicas
       Port: 6379

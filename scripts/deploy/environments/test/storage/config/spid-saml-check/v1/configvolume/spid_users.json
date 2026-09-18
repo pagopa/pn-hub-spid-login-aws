@@ -1118,5 +1118,33 @@
     "domicileMunicipality": "Roma",
     "domicileProvince": "RM",
     "domicileNation": "IT"
+  },
+  {
+    "username": "utentenuovo",
+    "password": "password123",
+    "spidLevel": 2,
+    "spidCode": "SPID-063",
+    "familyName": "Nuovo",
+    "name": "Utente",
+    "gender": "M",
+    "dateOfBirth": "1996-08-08",
+    "countyOfBirth": "RM",
+    "placeOfBirth": "H501",
+    "idCard": "cartaIdentita FR160452 comuneVinci 2001-04-15 2023-04-15",
+    "expirationDate": "2040-06-05",
+    "fiscalNumber": "TINIT-NVUTNT96M08H501R",
+    "mobilePhone": "3983883894",
+    "email": "testIndirizzoFake@outlook.com",
+    "digitalAddress": "",
+    "ivaCode": "",
+    "companyName": "",
+    "registeredOffice": "",
+    "companyFiscalNumber": "",
+    "address": "Via Listz 21 00144 Roma",
+    "domicileStreetAddress": "Via Listz 21",
+    "domicilePostalCode": "00144",
+    "domicileMunicipality": "Roma",
+    "domicileProvince": "RM",
+    "domicileNation": "IT"
   }
 ]	
